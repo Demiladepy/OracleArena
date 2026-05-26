@@ -34,12 +34,11 @@ contract BountyBoard is IBountyBoard {
     }
 
     /// @inheritdoc IBountyBoard
-    function postBounty(
-        string calldata claim,
-        string[] calldata evidenceSources,
-        bytes32 bountyType,
-        uint64 deadline
-    ) external payable returns (uint256 bountyId) {
+    function postBounty(string calldata claim, string[] calldata evidenceSources, bytes32 bountyType, uint64 deadline)
+        external
+        payable
+        returns (uint256 bountyId)
+    {
         if (msg.value < MIN_BOUNTY) {
             revert PayoutTooSmall(msg.value, MIN_BOUNTY);
         }
@@ -135,9 +134,7 @@ contract BountyBoard is IBountyBoard {
         });
         _submissionCount[bountyId]++;
 
-        emit SubmissionRecorded(
-            bountyId, resolver, verdictHash, confidence, evidenceUri, uint64(block.timestamp)
-        );
+        emit SubmissionRecorded(bountyId, resolver, verdictHash, confidence, evidenceUri, uint64(block.timestamp));
     }
 
     /// @inheritdoc IBountyBoard

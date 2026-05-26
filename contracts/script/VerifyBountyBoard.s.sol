@@ -26,10 +26,7 @@ contract VerifyBountyBoard is Script {
 
         uint256 gasBefore = gasleft();
         uint256 bountyId = board.postBounty{value: payout}(
-            "Did Manchester City beat Arsenal on 2026-05-25?",
-            sources,
-            board.URL_RESOLVABLE_FACT(),
-            deadline
+            "Did Manchester City beat Arsenal on 2026-05-25?", sources, board.URL_RESOLVABLE_FACT(), deadline
         );
         uint256 postGas = gasBefore - gasleft();
         console2.log("Posted bountyId:", bountyId);

@@ -87,12 +87,10 @@ interface IBountyBoard {
     error TransferFailed(address recipient, uint256 amount);
 
     /// @notice Post a URL-resolvable bounty with STT escrow
-    function postBounty(
-        string calldata claim,
-        string[] calldata evidenceSources,
-        bytes32 bountyType,
-        uint64 deadline
-    ) external payable returns (uint256 bountyId);
+    function postBounty(string calldata claim, string[] calldata evidenceSources, bytes32 bountyType, uint64 deadline)
+        external
+        payable
+        returns (uint256 bountyId);
 
     /// @notice Cancel an open bounty with no submissions; full refund to poster
     function cancelBounty(uint256 bountyId) external;

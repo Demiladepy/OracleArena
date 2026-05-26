@@ -50,10 +50,7 @@ contract BountyBoardTest is Test {
         sources[0] = "https://example.com/match-report";
         vm.prank(poster);
         bountyId = board.postBounty{value: PAYOUT}(
-            "Did Manchester City beat Arsenal?",
-            sources,
-            BOUNTY_TYPE,
-            uint64(block.timestamp + 1 days)
+            "Did Manchester City beat Arsenal?", sources, BOUNTY_TYPE, uint64(block.timestamp + 1 days)
         );
     }
 
@@ -509,9 +506,8 @@ contract BountyBoardTest is Test {
         uint256 oddPayout = 1 ether + 3;
         string[] memory sources = new string[](0);
         vm.prank(poster);
-        uint256 bountyId = board.postBounty{value: oddPayout}(
-            "claim", sources, BOUNTY_TYPE, uint64(block.timestamp + 1 days)
-        );
+        uint256 bountyId =
+            board.postBounty{value: oddPayout}("claim", sources, BOUNTY_TYPE, uint64(block.timestamp + 1 days));
         _recordSubmission(bountyId, resolverA, keccak256("TRUE"));
         _recordSubmission(bountyId, resolverB, keccak256("TRUE"));
 

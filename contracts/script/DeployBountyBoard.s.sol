@@ -13,12 +13,12 @@ contract DeployBountyBoard is Script {
         address consensusEngine = vm.envOr("CONSENSUS_ENGINE", deployer);
 
         if (protocolTreasury == deployer) {
-            console2.log("WARNING: PROTOCOL_TREASURY is the deployer address. Update once ProtocolTreasury is deployed.");
+            console2.log(
+                "WARNING: PROTOCOL_TREASURY is the deployer address. Update once ProtocolTreasury is deployed."
+            );
         }
         if (consensusEngine == deployer) {
-            console2.log(
-                "WARNING: CONSENSUS_ENGINE is the deployer address. Update once ConsensusEngine is deployed."
-            );
+            console2.log("WARNING: CONSENSUS_ENGINE is the deployer address. Update once ConsensusEngine is deployed.");
         }
 
         console2.log("Deployer:", deployer);
