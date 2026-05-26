@@ -8,5 +8,4 @@ import {ILiFiAdapter} from "./interfaces/ILiFiAdapter.sol";
 /// @dev Implementation TODO — verify LI.FI Somnia integration before implementing
 abstract contract LiFiAdapter is ILiFiAdapter {
     // TODO: implement quotePayoutRoute, initiatePayout
-
-    }
+}

@@ -8,5 +8,4 @@ import {IStreamPublisher} from "./interfaces/IStreamPublisher.sol";
 /// @dev Implementation TODO — verify SDS contract-level integration model first
 abstract contract StreamPublisher is IStreamPublisher {
     // TODO: implement publishLeaderboardUpdate, publishRaceViewUpdate, publishReceipt
-
-    }
+}

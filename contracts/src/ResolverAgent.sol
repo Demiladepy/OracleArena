@@ -8,5 +8,4 @@ import {IResolverAgent} from "./interfaces/IResolverAgent.sol";
 /// @dev Implementation TODO — verify inferToolsChat and reactive subscription on testnet first
 abstract contract ResolverAgent is IResolverAgent {
     // TODO: implement subscribeToBounties, submitVerdict, investigateBounty, getPayoutPreference, handleResponse
-
-    }
+}

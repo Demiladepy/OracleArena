@@ -8,5 +8,4 @@ import {IResolverRegistry} from "./interfaces/IResolverRegistry.sol";
 /// @dev Implementation TODO — slash() implemented but gated until AppealLayer (Phase 2)
 abstract contract ResolverRegistry is IResolverRegistry {
     // TODO: implement registerAgent, slash, updateReputation, getBond, getReputation, handlesTypeTag, minimumBond, setAppealLayer
-
-    }
+}

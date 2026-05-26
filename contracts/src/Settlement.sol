@@ -8,5 +8,4 @@ import {ISettlement} from "./interfaces/ISettlement.sol";
 /// @dev Implementation TODO — integrates LiFiAdapter for cross-chain resolver payout
 abstract contract Settlement is ISettlement {
     // TODO: implement settle
-
-    }
+}

@@ -8,5 +8,4 @@ import {Deploy} from "./Deploy.s.sol";
 contract DeployTestnet is Deploy {
     // TODO: load addresses from packages/config after deployment
     // TODO: verify on Shannon explorer
-
-    }
+}

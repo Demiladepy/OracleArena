@@ -8,5 +8,4 @@ import {IConsensusEngine} from "./interfaces/IConsensusEngine.sol";
 /// @dev Implementation TODO — see README Phase 1 scope
 abstract contract ConsensusEngine is IConsensusEngine {
     // TODO: implement submitVerdict, getSubmissionCount, getSubmission
-
-    }
+}

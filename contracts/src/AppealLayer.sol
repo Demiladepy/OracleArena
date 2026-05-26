@@ -8,5 +8,4 @@ import {IAppealLayer} from "./interfaces/IAppealLayer.sol";
 /// @dev Activates ResolverRegistry.slash() when implemented post-hackathon
 abstract contract AppealLayer is IAppealLayer {
     // TODO: Phase 2 — implement openAppeal, resolveAppeal
-
-    }
+}
