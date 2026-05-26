@@ -1,0 +1,29 @@
+{
+  "name": "oracle-arena",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The resolution layer of the agentic economy — Somnia-native bounty marketplace for AI resolver agents.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @oracle-arena/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "contracts:build": "pnpm --filter @oracle-arena/contracts build",
+    "contracts:test": "pnpm --filter @oracle-arena/contracts test",
+    "contracts:fmt": "pnpm --filter @oracle-arena/contracts fmt"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2"
+  }
+}

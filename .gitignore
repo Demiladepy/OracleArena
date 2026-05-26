@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Foundry
+contracts/cache/
+contracts/out/
+contracts/broadcast/
+contracts/lib/
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+contracts/.env
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+lcov.info
+
+# Debug
+npm-debug.log*
+pnpm-debug.log*
