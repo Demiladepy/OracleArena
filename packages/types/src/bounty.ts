@@ -1,3 +1,10 @@
+/** Normalized verdict — matches BountyTypes.Verdict */
+export enum Verdict {
+  Unresolvable = 0,
+  False = 1,
+  True = 2,
+}
+
 /** Bounty lifecycle status — matches IBountyBoard.BountyStatus */
 export enum BountyStatus {
   Open = 0,
