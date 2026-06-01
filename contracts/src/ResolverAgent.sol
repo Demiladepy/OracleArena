@@ -74,8 +74,8 @@ contract ResolverAgent is IAgentRequesterHandler {
         bytes32[] memory supportedTypes_
     ) payable {
         if (
-            platform_ == address(0) || bountyBoard_ == address(0) || registry_ == address(0) || consensusEngine_ == address(0)
-                || operator_ == address(0)
+            platform_ == address(0) || bountyBoard_ == address(0) || registry_ == address(0)
+                || consensusEngine_ == address(0) || operator_ == address(0)
         ) {
             revert TransferFailed(address(0), 0);
         }
@@ -141,7 +141,9 @@ contract ResolverAgent is IAgentRequesterHandler {
         Response[] memory responses,
         ResponseStatus status,
         Request memory /* details */
-    ) external {
+    )
+        external
+    {
         if (msg.sender != address(platform)) revert NotPlatform(msg.sender, address(platform));
 
         uint256 bountyId = pendingRequests[requestId];
@@ -256,8 +258,9 @@ contract ResolverAgent is IAgentRequesterHandler {
             bytes[] memory pendingToolCalls
         )
     {
-        (finishReason, responseText, updatedRoles, updatedMessages, pendingToolCallIds, pendingToolCalls) =
-            abi.decode(rawResult, (string, string, string[], string[], string[], bytes[]));
+        (
+            finishReason, responseText, updatedRoles, updatedMessages, pendingToolCallIds, pendingToolCalls
+        ) = abi.decode(rawResult, (string, string, string[], string[], string[], bytes[]));
     }
 
     function _executePendingToolCalls(bytes[] memory pendingToolCalls) internal {

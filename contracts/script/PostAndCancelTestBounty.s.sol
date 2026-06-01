@@ -18,10 +18,7 @@ contract PostAndCancelTestBounty is Script {
         sources[0] = "https://example.com/sds-smoke-test";
 
         uint256 bountyId = board.postBounty{value: payout}(
-            "SDS publisher smoke test bounty",
-            sources,
-            board.URL_RESOLVABLE_FACT(),
-            uint64(block.timestamp + 1 days)
+            "SDS publisher smoke test bounty", sources, board.URL_RESOLVABLE_FACT(), uint64(block.timestamp + 1 days)
         );
         console2.log("Posted test bountyId:", bountyId);
 

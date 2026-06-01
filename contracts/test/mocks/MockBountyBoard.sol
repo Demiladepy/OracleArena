@@ -88,12 +88,8 @@ contract MockBountyBoard is IBountyBoard {
         if (engine != address(0) && msg.sender != engine) {
             revert NotConsensusEngine(msg.sender, engine);
         }
-        _lastSettle = SettleCall({
-            bountyId: bountyId,
-            winningHash: winningVerdictHash,
-            winners: winners,
-            shares: payoutShares
-        });
+        _lastSettle =
+            SettleCall({bountyId: bountyId, winningHash: winningVerdictHash, winners: winners, shares: payoutShares});
         Bounty storage bounty = _bounties[bountyId];
         bounty.status = BountyStatus.Resolved;
         bounty.winningVerdictHash = winningVerdictHash;

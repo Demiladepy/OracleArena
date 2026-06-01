@@ -113,9 +113,7 @@ contract SettlementTest is Test {
     function test_queueFromNonConsensusEngine_reverts() public {
         vm.deal(stranger, AMOUNT);
         vm.prank(stranger);
-        vm.expectRevert(
-            abi.encodeWithSelector(ISettlement.NotConsensusEngine.selector, stranger, address(engine))
-        );
+        vm.expectRevert(abi.encodeWithSelector(ISettlement.NotConsensusEngine.selector, stranger, address(engine)));
         settlement.queuePayout{value: AMOUNT}(BOUNTY_ID, resolver, AMOUNT);
     }
 
@@ -126,7 +124,9 @@ contract SettlementTest is Test {
 
         uint64 readyAt = settlement.getQueuedAt(BOUNTY_ID, resolver) + uint64(settlement.RESCUE_DELAY());
         vm.prank(operator);
-        vm.expectRevert(abi.encodeWithSelector(ISettlement.RescueDelayNotElapsed.selector, readyAt, uint64(block.timestamp)));
+        vm.expectRevert(
+            abi.encodeWithSelector(ISettlement.RescueDelayNotElapsed.selector, readyAt, uint64(block.timestamp))
+        );
         settlement.rescuePayout(BOUNTY_ID, resolver);
     }
 

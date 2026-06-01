@@ -63,7 +63,10 @@ contract ConsensusEngine {
         address payoutPrefs_,
         address registryOwner_
     ) {
-        if (bountyBoard_ == address(0) || registry_ == address(0) || settlement_ == address(0) || payoutPrefs_ == address(0)) {
+        if (
+            bountyBoard_ == address(0) || registry_ == address(0) || settlement_ == address(0)
+                || payoutPrefs_ == address(0)
+        ) {
             revert ResolverNotActive(address(0));
         }
         bountyBoard = IBountyBoard(bountyBoard_);
@@ -79,12 +82,9 @@ contract ConsensusEngine {
         settlement.queuePayout{value: msg.value}(bountyId, resolver, msg.value);
     }
 
-    function submitVerdict(
-        uint256 bountyId,
-        bytes32 verdictHash,
-        uint16 confidence,
-        string calldata evidenceUri
-    ) external {
+    function submitVerdict(uint256 bountyId, bytes32 verdictHash, uint16 confidence, string calldata evidenceUri)
+        external
+    {
         if (!registry.isActive(msg.sender)) revert ResolverNotActive(msg.sender);
 
         if (submitters[bountyId][msg.sender]) revert AlreadySubmitted(bountyId, msg.sender);

@@ -61,10 +61,7 @@ contract ResolverPayoutPrefsTest is Test {
 
     function test_setPreference_revertsInvalidMode() public {
         IResolverPayoutPrefs.PayoutPref memory bad = IResolverPayoutPrefs.PayoutPref({
-            mode: 2,
-            destinationChain: 0,
-            destinationAsset: address(0),
-            destinationRecipient: address(0)
+            mode: 2, destinationChain: 0, destinationAsset: address(0), destinationRecipient: address(0)
         });
         vm.prank(operator);
         vm.expectRevert(abi.encodeWithSelector(IResolverPayoutPrefs.InvalidMode.selector, uint8(2)));

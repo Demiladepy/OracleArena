@@ -88,7 +88,8 @@ contract ResolverAgentTest is Test {
         returns (bytes memory)
     {
         bytes[] memory pendingToolCalls = new bytes[](1);
-        pendingToolCalls[0] = abi.encodeWithSignature("submitVerdict(bytes32,uint16,string)", verdictHash, confidence, evidenceUri);
+        pendingToolCalls[0] =
+            abi.encodeWithSignature("submitVerdict(bytes32,uint16,string)", verdictHash, confidence, evidenceUri);
 
         string[] memory roles = new string[](0);
         string[] memory messages = new string[](0);
@@ -124,23 +125,28 @@ contract ResolverAgentTest is Test {
         });
 
         vm.prank(address(platform));
-        agent.handleResponse(requestId, responses, ResponseStatus.Success, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: agent.handleResponse.selector,
-            subcommittee: new address[](0),
-            responses: responses,
-            responseCount: 1,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Success,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            responses,
+            ResponseStatus.Success,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: agent.handleResponse.selector,
+                subcommittee: new address[](0),
+                responses: responses,
+                responseCount: 1,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Success,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
 
         assertEq(agent.getPendingRequest(requestId), 0);
         MockConsensusEngine.VerdictCall memory verdict = consensusEngine.getLastVerdict();
@@ -158,23 +164,28 @@ contract ResolverAgentTest is Test {
         vm.expectEmit(true, true, false, true);
         emit AgentResponseFailed(requestId, BOUNTY_ID, uint8(ResponseStatus.Failed));
         vm.prank(address(platform));
-        agent.handleResponse(requestId, new Response[](0), ResponseStatus.Failed, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: new Response[](0),
-            responseCount: 0,
-            failureCount: 1,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Failed,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            new Response[](0),
+            ResponseStatus.Failed,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: new Response[](0),
+                responseCount: 0,
+                failureCount: 1,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Failed,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_handleResponse_timedOut() public {
@@ -182,23 +193,28 @@ contract ResolverAgentTest is Test {
         uint256 requestId = agent.evaluateBounty(BOUNTY_ID);
 
         vm.prank(address(platform));
-        agent.handleResponse(requestId, new Response[](0), ResponseStatus.TimedOut, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: new Response[](0),
-            responseCount: 0,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.TimedOut,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            new Response[](0),
+            ResponseStatus.TimedOut,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: new Response[](0),
+                responseCount: 0,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.TimedOut,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
         assertEq(agent.getPendingRequest(requestId), 0);
     }
 
@@ -212,23 +228,28 @@ contract ResolverAgentTest is Test {
         vm.expectEmit(true, true, false, false);
         emit DecodeFailed(requestId, BOUNTY_ID);
         vm.prank(address(platform));
-        agent.handleResponse(requestId, responses, ResponseStatus.Success, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: responses,
-            responseCount: 1,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Success,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            responses,
+            ResponseStatus.Success,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: responses,
+                responseCount: 1,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Success,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_evaluateBounty_revertsUnsupportedType() public {
@@ -285,45 +306,55 @@ contract ResolverAgentTest is Test {
     function test_handleResponse_revertsNotPlatform() public {
         vm.expectRevert(abi.encodeWithSelector(ResolverAgent.NotPlatform.selector, stranger, address(platform)));
         vm.prank(stranger);
-        agent.handleResponse(1, new Response[](0), ResponseStatus.Success, Request({
-            id: 1,
-            requester: address(0),
-            callbackAddress: address(0),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: new Response[](0),
-            responseCount: 0,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: 0,
-            deadline: 0,
-            status: ResponseStatus.None,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            1,
+            new Response[](0),
+            ResponseStatus.Success,
+            Request({
+                id: 1,
+                requester: address(0),
+                callbackAddress: address(0),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: new Response[](0),
+                responseCount: 0,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: 0,
+                deadline: 0,
+                status: ResponseStatus.None,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_handleResponse_revertsUnknownRequest() public {
         vm.prank(address(platform));
         vm.expectRevert(abi.encodeWithSelector(ResolverAgent.UnknownRequest.selector, 999));
-        agent.handleResponse(999, new Response[](0), ResponseStatus.Success, Request({
-            id: 999,
-            requester: address(0),
-            callbackAddress: address(0),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: new Response[](0),
-            responseCount: 0,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: 0,
-            deadline: 0,
-            status: ResponseStatus.None,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            999,
+            new Response[](0),
+            ResponseStatus.Success,
+            Request({
+                id: 999,
+                requester: address(0),
+                callbackAddress: address(0),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: new Response[](0),
+                responseCount: 0,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: 0,
+                deadline: 0,
+                status: ResponseStatus.None,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_setSystemPrompt_onlyOperator() public {
@@ -349,7 +380,9 @@ contract ResolverAgentTest is Test {
 
     function test_withdrawEarnings_revertsOverBalance() public {
         vm.prank(operator);
-        vm.expectRevert(abi.encodeWithSelector(ResolverAgent.InsufficientBalance.selector, 100 ether, address(agent).balance));
+        vm.expectRevert(
+            abi.encodeWithSelector(ResolverAgent.InsufficientBalance.selector, 100 ether, address(agent).balance)
+        );
         agent.withdrawEarnings(100 ether);
     }
 
@@ -360,23 +393,28 @@ contract ResolverAgentTest is Test {
         Response[] memory responses = new Response[](1);
         responses[0].result = hex"deadbeef";
         vm.prank(address(platform));
-        agent.handleResponse(requestId, responses, ResponseStatus.Success, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: responses,
-            responseCount: 1,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Success,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            responses,
+            ResponseStatus.Success,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: responses,
+                responseCount: 1,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Success,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
 
         vm.deal(address(agent), DEPOSIT);
         uint256 requestId2 = agent.evaluateBounty(BOUNTY_ID);
@@ -429,23 +467,28 @@ contract ResolverAgentTest is Test {
         vm.expectEmit(true, true, false, false);
         emit DecodeFailed(requestId, BOUNTY_ID);
         vm.prank(address(platform));
-        agent.handleResponse(requestId, new Response[](0), ResponseStatus.Success, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: new Response[](0),
-            responseCount: 0,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Success,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            new Response[](0),
+            ResponseStatus.Success,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: new Response[](0),
+                responseCount: 0,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Success,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_handleResponse_invalidFinishReason() public {
@@ -460,23 +503,28 @@ contract ResolverAgentTest is Test {
         vm.expectEmit(true, true, false, false);
         emit DecodeFailed(requestId, BOUNTY_ID);
         vm.prank(address(platform));
-        agent.handleResponse(requestId, responses, ResponseStatus.Success, Request({
-            id: requestId,
-            requester: address(agent),
-            callbackAddress: address(agent),
-            callbackSelector: bytes4(0),
-            subcommittee: new address[](0),
-            responses: responses,
-            responseCount: 1,
-            failureCount: 0,
-            threshold: 0,
-            createdAt: block.timestamp,
-            deadline: block.timestamp + 1 hours,
-            status: ResponseStatus.Success,
-            consensusType: ConsensusType.Majority,
-            remainingBudget: 0,
-            perAgentBudget: 0
-        }));
+        agent.handleResponse(
+            requestId,
+            responses,
+            ResponseStatus.Success,
+            Request({
+                id: requestId,
+                requester: address(agent),
+                callbackAddress: address(agent),
+                callbackSelector: bytes4(0),
+                subcommittee: new address[](0),
+                responses: responses,
+                responseCount: 1,
+                failureCount: 0,
+                threshold: 0,
+                createdAt: block.timestamp,
+                deadline: block.timestamp + 1 hours,
+                status: ResponseStatus.Success,
+                consensusType: ConsensusType.Majority,
+                remainingBudget: 0,
+                perAgentBudget: 0
+            })
+        );
     }
 
     function test_decodeAndSubmit_revertsNotSelf() public {
@@ -562,13 +610,7 @@ contract ResolverAgentTest is Test {
         vm.deal(operator, initialFunding);
         vm.prank(operator);
         deployed = new ResolverAgent{value: initialFunding}(
-            address(platform),
-            address(board),
-            address(registry),
-            address(consensusEngine),
-            operator,
-            "prompt",
-            types
+            address(platform), address(board), address(registry), address(consensusEngine), operator, "prompt", types
         );
     }
 }

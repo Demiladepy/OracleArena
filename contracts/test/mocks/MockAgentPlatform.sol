@@ -44,9 +44,8 @@ contract MockAgentPlatform is IAgentRequester {
         Request memory details
     ) external {
         StoredRequest memory stored = _requests[requestId];
-        (bool ok,) = stored.callbackAddress.call(
-            abi.encodeWithSelector(stored.callbackSelector, requestId, responses, status, details)
-        );
+        (bool ok,) = stored.callbackAddress
+            .call(abi.encodeWithSelector(stored.callbackSelector, requestId, responses, status, details));
         require(ok, "callback failed");
     }
 
@@ -54,16 +53,11 @@ contract MockAgentPlatform is IAgentRequester {
         return requestDeposit;
     }
 
-    function createAdvancedRequest(
-        uint256,
-        address,
-        bytes4,
-        bytes calldata,
-        uint256,
-        uint256,
-        ConsensusType,
-        uint256
-    ) external payable returns (uint256) {
+    function createAdvancedRequest(uint256, address, bytes4, bytes calldata, uint256, uint256, ConsensusType, uint256)
+        external
+        payable
+        returns (uint256)
+    {
         revert("not implemented");
     }
 

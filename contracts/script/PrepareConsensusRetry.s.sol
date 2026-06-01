@@ -12,8 +12,7 @@ contract PrepareConsensusRetry is Script {
         address payable agentB = payable(vm.envAddress("RESOLVER_AGENT_B"));
         address boardAddress = vm.envAddress("BOUNTY_BOARD_ADDRESS");
 
-        string memory strictPrompt =
-            "You are an Oracle Arena resolver. Evaluate URL-resolvable factual claims. "
+        string memory strictPrompt = "You are an Oracle Arena resolver. Evaluate URL-resolvable factual claims. "
             "When calling submitVerdict you MUST use these exact verdictHash bytes32 values copied verbatim: "
             "TRUE/YES claims -> 0x6273151f959616268004b58dbb21e5c851b7b8d04498b4aabee12291d22fc034. "
             "FALSE/NO claims -> 0xba9154e0baa69c78e0ca563b867df81bae9d177c4ea1452c35c84386a70f0f7a. "

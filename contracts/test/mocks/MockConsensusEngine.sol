@@ -21,12 +21,9 @@ contract MockConsensusEngine {
         bountyBoard = IBountyBoard(bountyBoard_);
     }
 
-    function submitVerdict(
-        uint256 bountyId,
-        bytes32 verdictHash,
-        uint16 confidence,
-        string calldata evidenceUri
-    ) external {
+    function submitVerdict(uint256 bountyId, bytes32 verdictHash, uint16 confidence, string calldata evidenceUri)
+        external
+    {
         lastVerdict = VerdictCall({
             bountyId: bountyId,
             resolver: msg.sender,

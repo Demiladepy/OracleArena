@@ -36,10 +36,7 @@ contract MockLiFiRouter is ILiFiRouter {
     );
 
     /// @notice Simulates LI.FI native bridge entrypoint
-    function startBridgeTokensViaBridge(ILiFiRouter.BridgeData calldata bridgeData, bytes calldata)
-        external
-        payable
-    {
+    function startBridgeTokensViaBridge(ILiFiRouter.BridgeData calldata bridgeData, bytes calldata) external payable {
         uint256 id = ++bridgeRequestCount;
         requests[id] = BridgeRequest({
             sender: msg.sender,

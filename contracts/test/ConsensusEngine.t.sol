@@ -278,7 +278,9 @@ contract ConsensusEngineTest is Test {
     }
 
     function test_markExpired_revertsBeforeDeadline() public {
-        vm.expectRevert(abi.encodeWithSelector(ConsensusEngine.DeadlineNotPassed.selector, BOUNTY_ID, block.timestamp + 1 days));
+        vm.expectRevert(
+            abi.encodeWithSelector(ConsensusEngine.DeadlineNotPassed.selector, BOUNTY_ID, block.timestamp + 1 days)
+        );
         engine.markExpired(BOUNTY_ID);
     }
 
@@ -291,7 +293,9 @@ contract ConsensusEngineTest is Test {
         vm.warp(block.timestamp + 2 days);
         vm.expectRevert(
             abi.encodeWithSelector(
-                ConsensusEngine.ConsensusAlreadyFinalized.selector, BOUNTY_ID, uint8(ConsensusEngine.ConsensusStatus.Agreed)
+                ConsensusEngine.ConsensusAlreadyFinalized.selector,
+                BOUNTY_ID,
+                uint8(ConsensusEngine.ConsensusStatus.Agreed)
             )
         );
         engine.markExpired(BOUNTY_ID);

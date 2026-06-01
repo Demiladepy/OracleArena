@@ -22,7 +22,10 @@ contract Settlement is ISettlement {
     mapping(uint256 => mapping(address => uint64)) public queuedAt;
 
     constructor(address bountyBoard_, address consensusEngine_, address payoutPrefs_, address lifiAdapter_) {
-        if (bountyBoard_ == address(0) || consensusEngine_ == address(0) || payoutPrefs_ == address(0) || lifiAdapter_ == address(0)) {
+        if (
+            bountyBoard_ == address(0) || consensusEngine_ == address(0) || payoutPrefs_ == address(0)
+                || lifiAdapter_ == address(0)
+        ) {
             revert NotConsensusEngine(address(0), consensusEngine_);
         }
         bountyBoard = IBountyBoard(bountyBoard_);
@@ -77,8 +80,7 @@ contract Settlement is ISettlement {
         uint64 readyAt = queuedAt[bountyId][resolver] + uint64(RESCUE_DELAY);
         if (block.timestamp < readyAt) revert RescueDelayNotElapsed(readyAt, uint64(block.timestamp));
 
-        IResolverRegistry.Agent memory agent =
-            ResolverPayoutPrefs(address(payoutPrefs)).registry().getAgent(resolver);
+        IResolverRegistry.Agent memory agent = ResolverPayoutPrefs(address(payoutPrefs)).registry().getAgent(resolver);
         if (msg.sender != agent.operator) revert IResolverPayoutPrefs.NotOperator(msg.sender, agent.operator);
 
         delete pendingForwards[bountyId][resolver];

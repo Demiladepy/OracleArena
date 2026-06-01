@@ -43,11 +43,9 @@ contract DeploySettlementPhase is Script {
         LiFiAdapter adapter = new LiFiAdapter(address(router));
         ResolverRegistry registry = new ResolverRegistry(predictedEngine, deployer, minBond);
         ResolverPayoutPrefs prefs = new ResolverPayoutPrefs(address(registry));
-        Settlement settlement =
-            new Settlement(predictedBoard, predictedEngine, address(prefs), address(adapter));
-        ConsensusEngine engine = new ConsensusEngine(
-            predictedBoard, address(registry), address(settlement), address(prefs), deployer
-        );
+        Settlement settlement = new Settlement(predictedBoard, predictedEngine, address(prefs), address(adapter));
+        ConsensusEngine engine =
+            new ConsensusEngine(predictedBoard, address(registry), address(settlement), address(prefs), deployer);
         BountyBoard board = new BountyBoard(treasury, address(engine));
 
         vm.stopBroadcast();

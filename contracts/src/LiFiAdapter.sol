@@ -38,8 +38,9 @@ contract LiFiAdapter is ILiFiAdapter {
             hasDestinationCall: false
         });
 
-        (bool ok, bytes memory revertData) =
-            router.call{value: msg.value}(abi.encodeWithSelector(ILiFiRouter.startBridgeTokensViaBridge.selector, bridgeData, bytes("")));
+        (bool ok, bytes memory revertData) = router.call{value: msg.value}(
+            abi.encodeWithSelector(ILiFiRouter.startBridgeTokensViaBridge.selector, bridgeData, bytes(""))
+        );
 
         if (!ok) revert BridgeFailed(router, revertData);
 
