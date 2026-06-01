@@ -9,10 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        landing: {
+          base: 'var(--bg-base)',
+          elevated: 'var(--bg-elevated)',
+          card: 'var(--bg-card)',
+        },
         navy: {
           DEFAULT: '#0B1437',
           elevated: '#1A2447',
           deeper: '#060B22',
+        },
+        accent: {
+          bright: 'var(--accent-bright)',
+        },
+        purple: {
+          accent: 'var(--purple-accent)',
         },
         ice: '#CADCFC',
         cyan: {

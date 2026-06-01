@@ -1,5 +1,5 @@
-import { MarketplaceView } from '../components/pages/MarketplaceView';
+import { LandingView } from '../components/pages/LandingView';
 
 export default function HomePage() {
-  return <MarketplaceView />;
+  return <LandingView />;
 }

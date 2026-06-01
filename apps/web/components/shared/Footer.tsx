@@ -11,7 +11,10 @@ export function Footer() {
           <Link href="https://github.com/nibiru/oraclearena" className="text-ice hover:text-cyan transition-colors">
             GitHub
           </Link>
-          <Link href="/" className="text-ice hover:text-cyan transition-colors">
+          <Link
+            href="https://github.com/nibiru/oraclearena#readme"
+            className="text-ice hover:text-cyan transition-colors"
+          >
             README
           </Link>
           <span className="text-surface-muted">Chain 50312 · STT</span>

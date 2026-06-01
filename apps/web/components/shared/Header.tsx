@@ -6,7 +6,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { demoConfig } from '@oracle-arena/config';
 
 const nav = [
-  { href: '/', label: 'Marketplace' },
+  { href: '/marketplace', label: 'Marketplace' },
   { href: `/bounty/${demoConfig.bountyId}`, label: 'Demo Race' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/post', label: 'Post Bounty' },

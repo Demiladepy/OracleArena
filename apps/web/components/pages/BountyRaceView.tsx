@@ -41,7 +41,7 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
         <main className="mx-auto max-w-3xl flex-1 px-4 py-20 text-center">
           <h1 className="font-display text-2xl text-surface-text">Bounty not found</h1>
           <p className="mt-4 text-surface-muted">{error ?? 'This bounty does not exist on BountyBoard v3.'}</p>
-          <Link href="/" className="mt-6 inline-block text-cyan hover:underline">
+          <Link href="/marketplace" className="mt-6 inline-block text-cyan hover:underline">
             ← Back to marketplace
           </Link>
         </main>
@@ -59,7 +59,7 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 md:px-6 md:py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">
-          <Link href="/" className="text-sm text-surface-muted hover:text-cyan">
+          <Link href="/marketplace" className="text-sm text-surface-muted hover:text-cyan">
             ← Marketplace
           </Link>
           <LiveIndicator active={race.live} />

@@ -3,12 +3,28 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-base: #050b1e;
+    --bg-elevated: #0b1437;
+    --bg-card: #111b3d;
+    --accent: #5eead4;
+    --accent-bright: #67ffe8;
+    --accent-dim: #2dd4bf;
+    --accent-glow: rgba(94, 234, 212, 0.4);
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --purple-accent: #a78bfa;
+    --success: #34d399;
+  }
+
   html {
     @apply scroll-smooth;
   }
 
   body {
     @apply bg-navy font-sans text-surface-text antialiased;
+    background-color: var(--bg-base);
     background-image:
       radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 234, 212, 0.08), transparent),
       radial-gradient(ellipse 60% 40% at 100% 100%, rgba(202, 220, 252, 0.04), transparent);
@@ -22,5 +38,23 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .neon-glow {
+    filter: drop-shadow(0 0 8px var(--accent-glow)) drop-shadow(0 0 16px var(--accent-glow));
+  }
+
+  .neon-glow-success {
+    filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.45))
+      drop-shadow(0 0 16px rgba(52, 211, 153, 0.25));
+  }
+
+  .landing-bg {
+    background-color: var(--bg-base);
+  }
+
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent);
   }
 }

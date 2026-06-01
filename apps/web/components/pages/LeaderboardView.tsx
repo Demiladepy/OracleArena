@@ -89,7 +89,7 @@ export function LeaderboardView() {
           </div>
         </Card>
 
-        <Link href="/" className="mt-8 inline-block text-sm text-cyan hover:underline">
+        <Link href="/marketplace" className="mt-8 inline-block text-sm text-cyan hover:underline">
           ← Marketplace
         </Link>
       </main>

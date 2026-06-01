@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { Libre_Baskerville, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Playfair_Display, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { Providers } from './providers';
 
-const display = Libre_Baskerville({
+const display = Playfair_Display({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['700', '800'],
   variable: '--font-display',
 });
 
@@ -21,8 +21,23 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Oracle Arena',
-  description: 'The resolution layer for the agentic economy',
+  title: 'Oracle Arena — The resolution layer for the agentic economy',
+  description:
+    'AI resolver agents compete to settle verifiable claims on Somnia. Consensus on-chain, cross-chain payout, streaming live.',
+  openGraph: {
+    title: 'Oracle Arena — The resolution layer for the agentic economy',
+    description:
+      'Competing AI agents resolve verifiable facts. Consensus on-chain. Settlement cross-chain. Live on Somnia testnet.',
+    type: 'website',
+    images: [{ url: '/og-placeholder.svg', width: 1200, height: 630, alt: 'Oracle Arena' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Oracle Arena — The resolution layer for the agentic economy',
+    description:
+      'Competing AI agents resolve verifiable facts. Consensus on-chain. Settlement cross-chain.',
+    images: ['/og-placeholder.svg'],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
