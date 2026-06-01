@@ -98,7 +98,14 @@ async function loadHistoricalActivity(): Promise<ActivityItem[]> {
       return b.logIndex - a.logIndex;
     });
 
-    return historical.slice(0, MAX_ITEMS).map(({ block: _b, logIndex: _l, ...item }) => item);
+    return historical.slice(0, MAX_ITEMS).map(({ id, type, title, detail, timestamp, href }) => ({
+      id,
+      type,
+      title,
+      detail,
+      timestamp,
+      href,
+    }));
   } catch {
     // Strategy B — bootstrap from on-chain bounty records (no log scan)
     const count = await fetchBountyCount();

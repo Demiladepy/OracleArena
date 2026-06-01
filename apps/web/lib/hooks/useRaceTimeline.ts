@@ -9,7 +9,6 @@ import {
   bountyBoardAbi,
   consensusEngineAbi,
   mockLiFiRouterAbi,
-  resolverRegistryAbi,
   settlementAbi,
   type AgentRecord,
   type OnChainSubmission,

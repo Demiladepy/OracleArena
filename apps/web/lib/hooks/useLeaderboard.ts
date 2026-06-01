@@ -111,8 +111,6 @@ export function useLeaderboard() {
   const [live, setLive] = useState(false);
 
   useEffect(() => {
-    let unwatch: (() => void) | undefined;
-
     async function refresh() {
       try {
         const data = await loadLeaderboard();
@@ -125,7 +123,7 @@ export function useLeaderboard() {
 
     refresh();
 
-    unwatch = watchContractEvent(publicClient, {
+    const unwatch = watchContractEvent(publicClient, {
       address: addresses.resolverRegistry,
       abi: resolverRegistryAbi,
       eventName: 'AgentRegistered',

@@ -1,4 +1,4 @@
-import { type Address, formatEther, formatUnits, type Hash } from 'viem';
+import { type Address, formatEther, type Hash } from 'viem';
 import { EXPLORER_URL } from '../chains';
 
 export function formatAddress(address: Address | string, chars = 4): string {
