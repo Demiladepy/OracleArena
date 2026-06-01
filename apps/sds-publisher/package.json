@@ -1,0 +1,23 @@
+{
+  "name": "@oracle-arena/sds-publisher",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Oracle Arena SDS publisher — mirrors on-chain events to Somnia Data Streams",
+  "scripts": {
+    "sds-publish:setup-schemas": "tsx src/setup-schemas.ts",
+    "sds-publish:run": "tsx src/publisher.ts",
+    "sds-publish:read": "tsx src/read-record.ts",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@oracle-arena/config": "workspace:*",
+    "@somnia-chain/streams": "^0.12.2",
+    "dotenv": "^16.4.7",
+    "viem": "~2.37.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -15,7 +15,7 @@ contract PostOpenBounty is Script {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
 
         string[] memory sources = new string[](1);
-        sources[0] = "https://www.bbc.com/sport/football";
+        sources[0] = "https://www.bbc.com/sport/football/teams/manchester-city";
 
         uint64 deadline = uint64(block.timestamp + 6 days);
         uint256 payout = 0.2 ether;
@@ -24,7 +24,7 @@ contract PostOpenBounty is Script {
 
         uint256 gasBefore = gasleft();
         uint256 bountyId = board.postBounty{value: payout}(
-            "Did Manchester City beat Arsenal in their match on 2026-05-18?",
+            "Did Manchester City beat Arsenal in their most recent Premier League fixture?",
             sources,
             board.URL_RESOLVABLE_FACT(),
             deadline

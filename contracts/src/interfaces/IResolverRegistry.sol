@@ -4,60 +4,86 @@ pragma solidity ^0.8.20;
 /// @title IResolverRegistry
 /// @notice Agent registration, bonding, specialization tags, and reputation ledger
 interface IResolverRegistry {
-    /// @notice Emitted when a resolver agent registers
-    event AgentRegistered(address indexed agent, bytes32[] typeTags, uint256 bondAmount);
+    enum AgentStatus {
+        None,
+        Active,
+        Withdrawing,
+        Withdrawn
+    }
 
-    /// @notice Emitted when reputation is updated after a settled bounty
-    event ReputationUpdated(address indexed agent, int256 delta, uint256 newScore);
+    struct Reputation {
+        uint64 resolutionsAttempted;
+        uint64 resolutionsAgreed;
+        uint256 totalEarnings;
+    }
 
-    /// @notice Emitted when a bond is slashed (Phase 2: via AppealLayer)
-    event BondSlashed(address indexed agent, uint256 amount, address indexed recipient);
+    struct Agent {
+        address agentAddress;
+        address operator;
+        uint256 bond;
+        bytes32[] typeTags;
+        Reputation reputation;
+        AgentStatus status;
+        uint64 registeredAt;
+        uint64 withdrawalReadyAt;
+    }
 
-    error AgentAlreadyRegistered();
-    error AgentNotRegistered();
-    error InsufficientBond();
-    error OnlyAppealLayer();
-    error AppealLayerNotConfigured();
+    event AgentRegistered(
+        address indexed agent, address indexed operator, bytes32[] typeTags, uint256 bond, uint64 registeredAt
+    );
 
-    /// @notice Register a resolver agent with bond and handled type tags
-    /// @param agent ResolverAgent contract address
-    /// @param typeTags Bounty type tags this agent handles (reactive filter)
-    /// @return success Whether registration succeeded
-    function registerAgent(address agent, bytes32[] calldata typeTags) external payable returns (bool success);
+    event ReputationUpdated(
+        address indexed agent, bool agreed, uint256 earnings, uint64 resolutionsAttempted, uint64 resolutionsAgreed
+    );
 
-    /// @notice Slash a resolver bond (callable only by AppealLayer when configured)
-    /// @param agent Agent to slash
-    /// @param amount Amount to slash from bond
-    /// @param recipient Address receiving slashed funds
+    event WithdrawalRequested(address indexed agent, address indexed operator, uint64 readyAt);
+
+    event WithdrawalCompleted(address indexed agent, address indexed operator, uint256 refunded);
+
+    event AgentSlashed(address indexed agent, uint256 amount, address indexed recipient, address indexed slashedBy);
+
+    event AppealLayerSet(address indexed appealLayer);
+
+    error BondTooSmall(uint256 sent, uint256 minimum);
+    error NoTypeTags();
+    error TooManyTypeTags(uint256 sent, uint256 maximum);
+    error AgentAlreadyRegistered(address agent);
+    error AgentNotRegistered(address agent);
+    error AgentNotActive(address agent, uint8 currentStatus);
+    error AgentNotWithdrawing(address agent, uint8 currentStatus);
+    error WithdrawalNotReady(address agent, uint64 readyAt, uint64 currentTime);
+    error NotOperator(address caller, address operator);
+    error NotConsensusEngine(address caller, address expected);
+    error NotAppealLayer(address caller, address expected);
+    error AppealLayerNotSet();
+    error AppealLayerAlreadySet(address current);
+    error SlashAmountExceedsBond(uint256 amount, uint256 bond);
+    error NotOwner(address caller, address expected);
+    error TransferFailed(address recipient, uint256 amount);
+
+    function registerAgent(address agent, bytes32[] calldata typeTags) external payable;
+
+    function updateReputation(address agent, bool agreed, uint256 earnings) external;
+
+    function requestWithdrawal(address agent) external;
+
+    function completeWithdrawal(address agent) external;
+
     function slash(address agent, uint256 amount, address recipient) external;
 
-    /// @notice Update agent reputation after settlement
-    /// @param agent Agent address
-    /// @param delta Reputation change (positive or negative)
-    function updateReputation(address agent, int256 delta) external;
+    function setAppealLayer(address newAppealLayer) external;
 
-    /// @notice Get locked bond for an agent
-    /// @param agent Agent address
-    /// @return bond Locked bond amount in STT
-    function getBond(address agent) external view returns (uint256 bond);
+    function getAgent(address agent) external view returns (Agent memory);
 
-    /// @notice Get reputation score for an agent
-    /// @param agent Agent address
-    /// @return score Current reputation score
-    function getReputation(address agent) external view returns (uint256 score);
+    function getBond(address agent) external view returns (uint256);
 
-    /// @notice Check whether an agent handles a given type tag
-    /// @param agent Agent address
-    /// @param typeTag Bounty type tag
-    /// @return handles True if agent subscribed to this tag
-    function handlesTypeTag(address agent, bytes32 typeTag) external view returns (bool handles);
+    function getReputation(address agent) external view returns (Reputation memory);
 
-    /// @notice Minimum bond required for registration (MVP: 50 STT)
-    function minimumBond() external view returns (uint256);
+    function handlesTypeTag(address agent, bytes32 tag) external view returns (bool);
 
-    /// @notice Set AppealLayer address (Phase 2 wiring)
-    /// @param appealLayer AppealLayer contract address
-    function setAppealLayer(address appealLayer) external;
+    function getAgentsForTypeTag(bytes32 tag, uint256 offset, uint256 limit) external view returns (address[] memory);
 
-    // TODO: confirm whether deregisterAgent belongs in this interface (Phase 2 open registration)
+    function totalAgents() external view returns (uint256);
+
+    function isActive(address agent) external view returns (bool);
 }

@@ -6,16 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app/ lib/"
+    "lint": "eslint app/ lib/ components/"
   },
   "dependencies": {
     "@oracle-arena/config": "workspace:*",
     "@oracle-arena/types": "workspace:*",
+    "@rainbow-me/rainbowkit": "2.2.1",
+    "@somnia-chain/streams": "^0.12.2",
+    "@tanstack/react-query": "^5.62.8",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
     "next": "^14.2.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "viem": "^2.21.54",
-    "wagmi": "^2.14.6"
+    "viem": "~2.37.8",
+    "wagmi": "2.14.6"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

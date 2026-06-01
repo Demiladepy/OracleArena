@@ -1,6 +1,6 @@
 # BountyBoard — Deployment & Verification Findings
 
-**Status:** Implementation and tests complete. **Testnet deployment pending** — no funded `PRIVATE_KEY` in environment at verification time (2026-05-25).
+**Status:** **LIVE on Somnia testnet** (2026-05-25). Open bounty #2 awaiting resolution.
 
 ---
 
@@ -15,18 +15,9 @@
 | Metric | BountyBoard.sol |
 |--------|-----------------|
 | Tests | 34 passing (`BountyBoardTest`) |
-| Line coverage | **96.60%** (142/147) — meets >95% target |
-| Branch coverage | **95.78%** (159/166) — meets >95% target |
-| Function coverage | 81.58% (31/38) |
+| Line coverage | **96.60%** (142/147) |
+| Branch coverage | **95.78%** (159/166) |
 | Compiler | Solidity 0.8.20, `via_ir = true` (required for `string[]` calldata → storage) |
-
-Run locally:
-
-```bash
-cd contracts
-forge test --match-contract BountyBoardTest
-forge coverage --match-contract BountyBoard --report summary --ir-minimum
-```
 
 ---
 
@@ -35,89 +26,114 @@ forge coverage --match-contract BountyBoard --report summary --ir-minimum
 | Field | Value |
 |-------|-------|
 | **Contract** | `BountyBoard` |
-| **Address** | **PENDING** — run deployment script |
-| **Deployment tx** | **PENDING** |
+| **Address** | `0xcf812e4735CeA2a5d966ad2999e982b2ED623092` |
 | **Network** | Somnia Testnet (chain ID `50312`) |
 | **RPC** | `https://api.infra.testnet.somnia.network` |
-| **Explorer** | `https://shannon-explorer.somnia.network` |
+| **Explorer** | [Shannon Explorer — contract](https://shannon-explorer.somnia.network/address/0xcf812e4735CeA2a5d966ad2999e982b2ED623092) |
 
 ### Constructor args (MVP placeholders)
 
-| Parameter | MVP testnet value |
-|-----------|-------------------|
-| `protocolTreasury_` | Deployer address (via `PROTOCOL_TREASURY` env or default) |
-| `consensusEngine_` | Deployer address (via `CONSENSUS_ENGINE` env or default) |
+| Parameter | Testnet value | Notes |
+|-----------|---------------|-------|
+| `protocolTreasury_` | `0x0C503557CC81701037240e982c9520Aa1ffca4Cc` (deployer) | **Placeholder** — update when ProtocolTreasury deploys |
+| `consensusEngine_` | `0x0C503557CC81701037240e982c9520Aa1ffca4Cc` (deployer) | **Placeholder** — update when ConsensusEngine deploys |
 
-Replace `consensusEngine_` when `ConsensusEngine.sol` is deployed.
+### Transaction hashes (`deploy-testnet.ps1` successful run)
 
-### Deployment commands
+| Step | Tx hash | Status | Gas used |
+|------|---------|--------|----------|
+| Deploy BountyBoard | [`0x750b70cd1a2bba7efcafd666c8cc3f06f60300918027be4ca276d6209d17957b`](https://shannon-explorer.somnia.network/tx/0x750b70cd1a2bba7efcafd666c8cc3f06f60300918027be4ca276d6209d17957b) | Success | **24,751,444** |
+| Smoke: `postBounty` (bounty #1) | [`0x9dbde85fbd8789831b6999e5aa63c684f0ad22ce6833a46c2a57bd81d840566a`](https://shannon-explorer.somnia.network/tx/0x9dbde85fbd8789831b6999e5aa63c684f0ad22ce6833a46c2a57bd81d840566a) | Success | **2,980,666** |
+| Smoke: `cancelBounty` (bounty #1) | [`0x9cab7b54a57a0c60ea7679f2f3d0fd9855cc27f1a5188ce28abb4cdd0c011073`](https://shannon-explorer.somnia.network/tx/0x9cab7b54a57a0c60ea7679f2f3d0fd9855cc27f1a5188ce28abb4cdd0c011073) | Success | **62,949** |
+| Post open bounty (#2) | [`0x33cd1689b826430e950dbbbf59fac735fed0d1b8f2af045506f8130ad2c73b34`](https://shannon-explorer.somnia.network/tx/0x33cd1689b826430e950dbbbf59fac735fed0d1b8f2af045506f8130ad2c73b34) | Success | **2,980,666** |
 
-```bash
-cd contracts
-# .env: PRIVATE_KEY, optional PROTOCOL_TREASURY, CONSENSUS_ENGINE
-forge script script/DeployBountyBoard.s.sol:DeployBountyBoard \
-  --rpc-url https://api.infra.testnet.somnia.network \
-  --broadcast -vvv
+**Failed txs during debugging (do not use):**
 
-# Smoke test: post + cancel sample bounty
-BOUNTY_BOARD_ADDRESS=0x... forge script script/VerifyBountyBoard.s.sol:VerifyBountyBoard \
-  --rpc-url https://api.infra.testnet.somnia.network \
-  --broadcast -vvv
-```
+| Tx hash | Issue |
+|---------|-------|
+| `0xe2ab388a…`, `0x4614fb96…`, `0xce68e166…` | BountyBoard CREATE OOG at ~2.15M / ~6.6M gas (default forge estimate) |
+| `0x006cc6c6…` | `cancelBounty` OOG at 961,940 gas when bundled with `postBounty` in one script |
 
----
+### Live open bounty
 
-## 4. Gas costs (local Foundry estimates)
-
-Approximate gas from test suite (not testnet gas price):
-
-| Operation | Gas (approx) |
-|-----------|----------------|
-| Deploy `BountyBoard` | ~3.5M (viaIR compile/deploy) |
-| `postBounty` (1 evidence source) | ~320k |
-| `postBounty` (5 sources) | Scales with string storage — isolate on testnet |
-| `cancelBounty` | ~326k |
-| `recordSubmission` | ~480k (first submission) |
-| `settleBounty` | ~712k |
-| `markUnresolved` | ~368k–624k |
-
-Record exact testnet gas after broadcast from transaction receipts.
+| Field | Value |
+|-------|-------|
+| **bountyId** | `2` |
+| **Claim** | "Did Manchester City beat Arsenal in their most recent Premier League fixture?" |
+| **Evidence** | `https://www.bbc.com/sport/football/teams/manchester-city` |
+| **Payout** | 0.2 STT |
+| **Type** | `URL_RESOLVABLE_FACT` (`0xa33c8d070672fcb09b8793d4f6476727b2eba9543cf0baeff41db1aae1211dd0`) |
+| **Status** | Open (`0`) |
 
 ---
 
-## 5. Spec deviations and README deltas
+## 4. Gas costs — local vs testnet
 
-### Intentional interface expansion
+Effective gas price on successful txs: **6 gwei** (`6000000000` wei).
 
-The scaffolded `IBountyBoard` from Phase 1 scaffolding was **replaced** to match this phase's spec:
+| Operation | Local Foundry (avg) | Somnia testnet (receipt) | Ratio (testnet / local) |
+|-----------|---------------------|--------------------------|-------------------------|
+| Deploy `BountyBoard` | ~3.5M (compile artifact) | **24,751,444** | ~7× vs naive deploy estimate |
+| `postBounty` (1 source) | ~324,458 | **2,980,666** | **~9.2×** |
+| `cancelBounty` | ~28,295 | **62,949** | **~2.2×** |
 
-- Added: `cancelBounty`, `recordSubmission`, `settleBounty`, expanded events, `BountyStatus` enum (Open/Submitted/Resolved/Unresolved/Cancelled)
-- Removed: `markSettled`, `getEscrowBalance`, fee-at-post model
+Simulation gas inside scripts (`gasleft()` deltas) understates on-chain usage even further (~334k simulated vs 2.98M on-chain for post).
 
-### README vs implementation: protocol fee timing
+---
 
-| README (original) | This implementation |
-|-------------------|---------------------|
-| 2% fee deducted **at post** | 2% fee deducted on **`settleBounty`** and **`markUnresolved`** only |
-| Cancel refunds 98% | Cancel refunds **100%** (no fee on cancel) |
+## 5. ⚠️ Somnia / via_ir gas multiplier (load-bearing)
 
-**Recommendation:** Update README economic model to match implementation, or change contract to fee-at-post in a follow-up (would affect escrow accounting).
+**Finding:** Somnia testnet execution gas for `via_ir` contracts is **far above** Foundry's default `--gas-estimate-multiplier` (130% = 1.3×). Underestimation causes CREATE/CALL txs to hit their gas limit and revert with `status: 0` while consuming the full limit.
+
+**Working forge flags (`deploy-testnet.ps1`):**
+
+| Tx type | `--gas-estimate-multiplier` | Notes |
+|---------|----------------------------|-------|
+| Contract CREATE (`via_ir`) | **2000** (~20×) | BountyBoard deploy succeeded at ~24.75M gas |
+| Single CALL (`postBounty`, `cancelBounty`, etc.) | **8000** (~80×) | Use **separate forge script invocations** per tx when a script has multiple broadcasts — otherwise gas is allocated proportionally and later txs OOG |
+
+**Rule of thumb for this repo:** treat Somnia testnet gas as **~10–20× local Foundry estimates** for `via_ir` contracts until Somnia/Foundry documents official behavior.
+
+---
+
+## 6. Shannon explorer — `BountyPosted` event indexing
+
+Inspected [`0x33cd1689…`](https://shannon-explorer.somnia.network/tx/0x33cd1689b826430e950dbbbf59fac735fed0d1b8f2af045506f8130ad2c73b34) (open bounty #2):
+
+| Field | Explorer behavior |
+|-------|-------------------|
+| **Indexed topics** | `bountyId`, `poster`, `bountyType` decode cleanly in topics |
+| **Dynamic `string claim`** | Stored in log `data` as ABI-encoded bytes (770-byte payload) — **not rendered as human-readable text in the default log view** |
+| **`string[] evidenceSources`** | Same — nested ABI encoding inside `data`; decodable off-chain via standard `BountyPosted` ABI, but **not auto-expanded in Shannon UI** |
+
+**Conclusion:** reactive subscribers and indexers must decode log `data` themselves. Do not rely on Shannon explorer to display `claim` or `evidenceSources` as readable fields.
+
+Raw log decode (RPC) confirms correct encoding: claim length `0x2f` (47 chars), one evidence URL `https://example.com/...` / BBC URL on bounty #2.
+
+---
+
+## 7. Spec deviations and README deltas
+
+### Protocol fee timing
+
+| README (original) | Implementation |
+|-------------------|----------------|
+| 2% fee at post | 2% on `settleBounty` / `markUnresolved` only |
+| Cancel refunds 98% | Cancel refunds **100%** |
 
 ### Bounty type tag
 
-| README example | Implementation constant |
-|----------------|-------------------------|
+| README example | Deployed constant |
+|----------------|-------------------|
 | `URL_RESOLVABLE_SPORTS_OUTCOME` | `URL_RESOLVABLE_FACT` = `keccak256("URL_RESOLVABLE_FACT")` |
-
-Reactive subscribers should filter on `URL_RESOLVABLE_FACT` until Phase 2 adds more types.
 
 ### `HasSubmissions` error
 
-Defined in spec but **unreachable** with current flow: first submission moves status `Open → Submitted`, so cancel hits `BountyNotOpen` before `HasSubmissions`. Kept for spec compliance if lifecycle changes later.
+Defined in spec but unreachable with current lifecycle (cancel hits `BountyNotOpen` after first submission).
 
 ---
 
-## 6. Event wire format (load-bearing)
+## 8. Event wire format (frozen API)
 
 ```solidity
 event BountyPosted(uint256 indexed bountyId, address indexed poster, bytes32 indexed bountyType, string claim, string[] evidenceSources, uint64 deadline, uint256 payout);
@@ -127,26 +143,15 @@ event BountySettled(uint256 indexed bountyId, bytes32 winningVerdictHash, addres
 event BountyUnresolved(uint256 indexed bountyId, uint256 refundedToPoster, uint256 feeAmount);
 ```
 
-Downstream: frontend, `StreamPublisher`, reactive filters must treat these as frozen API.
+---
+
+## 9. Notes for ResolverRegistry / ResolverAgent
+
+1. **ConsensusEngine** placeholder on BountyBoard = deployer — must be updated before production settlement flow.
+2. **`URL_RESOLVABLE_FACT`** is the live bounty type on testnet bounty #2.
+3. **`getOpenBounties`** is O(n) — fine for MVP.
+4. Use **gas multipliers above** for all future `via_ir` testnet deploys.
 
 ---
 
-## 7. Platform quirks
-
-- **`via_ir` required** for assigning `string[] calldata` to storage in `postBounty`.
-- **Shannon explorer event indexing** for dynamic `string[]` in events — verify after testnet post (may show hashed/ABI-encoded form in UI).
-- **No ERC20** — native STT only; contract accepts plain `payable` and `receive()`.
-
----
-
-## 8. Notes for next phase (ResolverRegistry / ResolverAgent)
-
-1. **ConsensusEngine** must be deployed and set as `consensusEngine` immutable — current MVP uses deployer placeholder.
-2. **`recordSubmission`** stores `verdictHash` (bytes32), not enum — ConsensusEngine normalizes verdicts before hashing.
-3. **Deadline enforcement** is on-chain in `recordSubmission`; agents waking late cannot submit.
-4. **`getOpenBounties`** is O(n) over all bounties — fine for MVP; index off-chain or add indexer for scale.
-5. **Fee model change** from README — align docs before demo to avoid judge confusion.
-
----
-
-*Last updated: 2026-05-25*
+*Last updated: 2026-05-25 — testnet deployment verified*

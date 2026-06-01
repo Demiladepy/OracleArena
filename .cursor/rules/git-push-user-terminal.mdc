@@ -1,0 +1,22 @@
+---
+description: Never push from the agent shell; user pushes from their own terminal
+alwaysApply: true
+---
+
+# Git push — user terminal only
+
+When the user asks to push (or says "push", "push to origin", "push and wait for CI", etc.):
+
+- Do **NOT** run `git push`, `git push -u`, or any remote push command from the agent shell.
+- You **may** still stage, commit, and verify locally (`git status`, `git diff`, `git log`, tests, lint).
+- After commits are ready, give the user the exact commands to run in **their own terminal** (IDE terminal or external), where their GitHub credentials are configured.
+- Tell them to run the push there so GitHub attributes the push to them.
+- Wait for the user to confirm the push succeeded before checking CI or continuing.
+
+Example handoff:
+
+```bash
+git push -u origin <branch>
+```
+
+Do not push on their behalf even if you have shell access and it would "just work."

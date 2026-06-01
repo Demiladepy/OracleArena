@@ -16,6 +16,8 @@ contract ProbeInferToolsChat is Script {
     string public constant USER_MESSAGE = "Please call setNumber with the integer 42.";
 
     function run() external {
+        vm.createSelectFork("https://api.infra.testnet.somnia.network");
+
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
 
         vm.startBroadcast(deployerKey);

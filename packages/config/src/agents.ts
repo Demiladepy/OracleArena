@@ -1,6 +1,11 @@
-// Values reflect Somnia Agents dev guide as of May 2026.
-// Verify against current platform docs before mainnet deployment.
+// Values reflect Somnia Agents explorer as of May 2026.
+// Authoritative source: https://agents.testnet.somnia.network
 // Prices are in STT with 18 decimals (same unit as ether / 1e18).
+
+import { somniaContracts } from './somnia';
+
+/** Live SomniaAgents platform contract on testnet */
+export const platformContract = somniaContracts.platformContract;
 
 /** Somnia platform agent IDs */
 export const agentIds = {

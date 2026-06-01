@@ -16,7 +16,10 @@
     "format:check": "prettier --check .",
     "contracts:build": "pnpm --filter @oracle-arena/contracts build",
     "contracts:test": "pnpm --filter @oracle-arena/contracts test",
-    "contracts:fmt": "pnpm --filter @oracle-arena/contracts fmt"
+    "contracts:fmt": "pnpm --filter @oracle-arena/contracts fmt",
+    "sds-publish:setup-schemas": "pnpm --filter @oracle-arena/sds-publisher sds-publish:setup-schemas",
+    "sds-publish:run": "pnpm --filter @oracle-arena/sds-publisher sds-publish:run",
+    "sds-publish:read": "pnpm --filter @oracle-arena/sds-publisher sds-publish:read"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -25,5 +28,12 @@
     "prettier-plugin-tailwindcss": "^0.6.9",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "wagmi": "2.14.6",
+      "@wagmi/core": "2.16.3",
+      "viem": "2.37.8"
+    }
   }
 }
