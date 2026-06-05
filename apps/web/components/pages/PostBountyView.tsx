@@ -308,6 +308,23 @@ export function PostBountyView() {
             <p className="mt-3 text-sm text-cyan">You&apos;ll send: {totalPreview}</p>
           </Card>
 
+          <Card className="border-cyan/15 bg-cyan/5 p-5">
+            <h3 className="font-display text-base text-surface-text">Multi-chain funding (Phase 2)</h3>
+            <p className="mt-2 text-sm text-surface-muted">
+              On Somnia testnet, bounties are funded with native STT in this form. On mainnet, fund your Somnia wallet
+              first via the{' '}
+              <a
+                href="https://docs.somnia.network/developer/building-dapps/cross-chain-swaps-and-bridging/integrating-the-li.fi-sdk"
+                className="text-cyan hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                LI.FI SDK
+              </a>{' '}
+              (bridge from Base, Ethereum, etc.), then post the bounty here with SOMI.
+            </p>
+          </Card>
+
           <Button
             type="submit"
             size="lg"

@@ -16,11 +16,17 @@ export const SETTLEMENTS_SCHEMA_NAME = 'oracle-arena:settlements:v1' as const;
 export const SETTLEMENTS_SCHEMA =
   'uint64 settledAt, uint256 bountyId, bytes32 winningVerdictHash, address[] winners, uint256[] shares, uint256 feeAmount' as const;
 
+/** Phase 2 — bonded appeals against settled bounties */
+export const APPEALS_SCHEMA_NAME = 'oracle-arena:appeals:v1' as const;
+export const APPEALS_SCHEMA =
+  'uint64 openedAt, uint256 bountyId, address challenger, uint256 bond, uint8 status, bool succeeded' as const;
+
 export const ALL_SCHEMAS = [
   { schemaName: BOUNTIES_SCHEMA_NAME, schema: BOUNTIES_SCHEMA },
   { schemaName: SUBMISSIONS_SCHEMA_NAME, schema: SUBMISSIONS_SCHEMA },
   { schemaName: RESOLVERS_SCHEMA_NAME, schema: RESOLVERS_SCHEMA },
   { schemaName: SETTLEMENTS_SCHEMA_NAME, schema: SETTLEMENTS_SCHEMA },
+  { schemaName: APPEALS_SCHEMA_NAME, schema: APPEALS_SCHEMA },
 ] as const;
 
 /** BountyStatus enum aligned with IBountyBoard */

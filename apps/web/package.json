@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app/ lib/ components/"
+    "lint": "eslint app/ lib/ components/",
+    "og:generate": "pnpm exec tsx scripts/generate-og.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^18.3.5",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.17.0",
+    "playwright": "^1.60.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2"

@@ -18,11 +18,13 @@ import {
   publishSubmissionRecord,
 } from './publish.js';
 import { AgentStatus, BountyStatus } from './schemas.js';
+import { recordPublisherError, recordPublisherEvent, startHealthServer } from './health.js';
 
 const chain: Chain = { ...somniaTestnet, contracts: {} };
 
 async function main() {
   const env = loadEnv();
+  startHealthServer();
   const sdk = createSdsSdk(true);
   const schemaIds = await computeSchemaIds(sdk);
 
@@ -59,8 +61,10 @@ async function main() {
         payout: merged.payout ?? 0n,
         status,
       });
+      recordPublisherEvent();
     } catch (error) {
       console.error('[error] publish bounty', bountyId, error);
+      recordPublisherError(String(error));
     }
   };
 

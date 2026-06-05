@@ -6,6 +6,8 @@ export const SDS_SCHEMA_IDS = {
   submissions: '0x41d7f0feed01d47b98720bfe6b89c9bc618d4ecfd586849c37d14a4c7e268c9d' as const,
   resolvers: '0xac19c137ad183b19b00bc9693859d90aafad6a0f33bd9db57a3ae8756ef42e29' as const,
   settlements: '0xae11e83c399c4040a638ee9d13c12d2b64bb1fc76eb555e2cd47d3aaa6177185' as const,
+  /** Registered 2026-06-04 — see sds-publish:setup-schemas */
+  appeals: '0x8e8ae43cb88209ca2906cbf3912bad2ff41ae5b18aaa36af609229c456064803' as const,
 };
 
 export const SDS_PUBLISHER_ADDRESS =

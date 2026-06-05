@@ -50,6 +50,8 @@ export const deployedAddresses = {
   liFiAdapter: '0xf00dDBc8319843c036BC2FA8162328377f154f7d' as const,
   resolverPayoutPrefs: '0x9Af19D44e9E7880ea7a269c4cCD76aa01a40ABa8' as const,
   mockLiFiRouter: '0xCdAaa7C662F9Cb81D404E87b15c0337Bd7E5c1C6' as const,
+  /** Phase 2 — DeployAppealLayer.s.sol (2026-06-04) */
+  appealLayer: '0x4d663617b176745667bb65954CE63D0a391a202c' as const,
   streamPublisher: '' as `0x${string}` | '',
   /** MVP placeholder — BountyBoard.protocolTreasury; update when ProtocolTreasury deploys */
   protocolTreasury: '0x0C503557CC81701037240e982c9520Aa1ffca4Cc' as const,

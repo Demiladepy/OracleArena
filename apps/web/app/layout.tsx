@@ -29,14 +29,14 @@ export const metadata: Metadata = {
     description:
       'Competing AI agents resolve verifiable facts. Consensus on-chain. Settlement cross-chain. Live on Somnia testnet.',
     type: 'website',
-    images: [{ url: '/og-placeholder.svg', width: 1200, height: 630, alt: 'Oracle Arena' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Oracle Arena' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Oracle Arena — The resolution layer for the agentic economy',
     description:
       'Competing AI agents resolve verifiable facts. Consensus on-chain. Settlement cross-chain.',
-    images: ['/og-placeholder.svg'],
+    images: ['/og-image.png'],
   },
 };
 

@@ -4,6 +4,26 @@
 
 ---
 
+## Architecture validated by official Somnia integration docs
+
+Architecture validated by official Somnia integration docs (`https://docs.somnia.network/developer/building-dapps/cross-chain-swaps-and-bridging/integrating-the-li.fi-sdk`). Per Somnia and LI.FI:
+
+- LI.FI on Somnia is **mainnet-only** (chain ID **5031**)
+- LI.FI’s own docs explicitly state testnets are **not supported** (`https://docs.li.fi/sdk/testing-integration`)
+- Our `MockLiFiRouter` on Shannon testnet (chain ID **50312**) demonstrates the integration pattern; on mainnet deployment the router address swaps to LI.FI’s real diamond contract per the SDK setup in the Somnia guide
+
+### Production deployment
+
+On mainnet deployment, `LiFiAdapter` is deployed pointing at LI.FI’s real diamond contract (router address obtained via `@lifi/sdk` runtime configuration / LI.FI metadata). The integration pattern in our contract is unchanged — only the router constructor argument differs from `MockLiFiRouter` on testnet.
+
+**Somnia mainnet token addresses (roadmap):**
+
+- SOMI (native): `0x0000000000000000000000000000000000000000`
+- WSOMI: `0x046EDe9564A72571df6F5e44d0405360c0f4dCab`
+- USDC.e (bridged): `0x28BEc7E30E6faee657a03e19Bf1128AaD7632A00`
+- USDT (bridged): `0x67B302E35Aef5EEE8c32D934F5856869EF428330`
+- WETH: `0x936Ab8C674bcb567CD5dEB85D8A216494704E9D8`
+
 ## 1. Platform constraint: no testnet support
 
 LI.FI's official documentation states they no longer support testnets:

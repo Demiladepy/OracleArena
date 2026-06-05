@@ -9,6 +9,7 @@ import { RaceTimeline } from '../bounty/RaceTimeline';
 import { ResolverCard } from '../bounty/ResolverCard';
 import { DisagreementSummary } from '../bounty/DisagreementSummary';
 import { VerdictSummary } from '../bounty/VerdictSummary';
+import { AppealPanel } from '../bounty/AppealPanel';
 import { Footer } from '../shared/Footer';
 import { Header } from '../shared/Header';
 import { LiveIndicator } from '../ui/LiveIndicator';
@@ -98,7 +99,12 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
           bounty.status === 3 ? (
             <DisagreementSummary bountyId={bountyId} submissions={[...submissions, ...race.submissions]} />
           ) : (
-            <VerdictSummary bounty={bounty} consensusStatus={consensusStatus} />
+            <>
+              <VerdictSummary bounty={bounty} consensusStatus={consensusStatus} />
+              {bounty.status === 2 ? (
+                <AppealPanel bountyId={bountyId} resolvedAt={bounty.resolvedAt} />
+              ) : null}
+            </>
           )}
         </div>
       </main>

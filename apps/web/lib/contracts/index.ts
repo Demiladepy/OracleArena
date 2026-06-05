@@ -11,6 +11,9 @@ export const addresses = {
   resolverPayoutPrefs: deployedAddresses.resolverPayoutPrefs as Address,
   resolverAgentA: deployedAddresses.resolverAgentA as Address,
   resolverAgentB: deployedAddresses.resolverAgentB as Address,
+  appealLayer: deployedAddresses.appealLayer
+    ? (deployedAddresses.appealLayer as Address)
+    : undefined,
 } as const;
 
 export const bountyBoardAbi = [
@@ -213,6 +216,23 @@ export const consensusEngineAbi = [
 export const resolverRegistryAbi = [
   {
     type: 'function',
+    name: 'MIN_BOND',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    type: 'function',
+    name: 'registerAgent',
+    stateMutability: 'payable',
+    inputs: [
+      { name: 'agent', type: 'address' },
+      { name: 'typeTags', type: 'bytes32[]' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
     name: 'getAgent',
     stateMutability: 'view',
     inputs: [{ name: 'agent', type: 'address' }],
@@ -317,6 +337,64 @@ export const mockLiFiRouterAbi = [
       { name: 'destinationChain', type: 'uint32', indexed: false },
       { name: 'destinationAsset', type: 'address', indexed: false },
       { name: 'destinationRecipient', type: 'address', indexed: false },
+    ],
+  },
+] as const;
+
+export const appealLayerAbi = [
+  {
+    type: 'function',
+    name: 'minChallengeBond',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    type: 'function',
+    name: 'appealWindow',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint64' }],
+  },
+  {
+    type: 'function',
+    name: 'openAppeal',
+    stateMutability: 'payable',
+    inputs: [
+      { name: 'bountyId', type: 'uint256' },
+      { name: 'adversarialEvidenceUrls', type: 'string[]' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'getAppeal',
+    stateMutability: 'view',
+    inputs: [{ name: 'bountyId', type: 'uint256' }],
+    outputs: [
+      { name: 'challenger', type: 'address' },
+      { name: 'bond', type: 'uint256' },
+      { name: 'adversarialEvidence', type: 'string[]' },
+      { name: 'openedAt', type: 'uint64' },
+      { name: 'resolved', type: 'bool' },
+      { name: 'succeeded', type: 'bool' },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'AppealOpened',
+    inputs: [
+      { name: 'bountyId', type: 'uint256', indexed: true },
+      { name: 'challenger', type: 'address', indexed: true },
+      { name: 'bondAmount', type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'AppealResolved',
+    inputs: [
+      { name: 'bountyId', type: 'uint256', indexed: true },
+      { name: 'challengeSucceeded', type: 'bool', indexed: false },
     ],
   },
 ] as const;

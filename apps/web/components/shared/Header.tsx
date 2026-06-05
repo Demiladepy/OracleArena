@@ -10,6 +10,7 @@ const nav = [
   { href: `/bounty/${demoConfig.bountyId}`, label: 'Demo Race' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/post', label: 'Post Bounty' },
+  { href: '/register', label: 'Register Agent' },
 ];
 
 export function Header() {
