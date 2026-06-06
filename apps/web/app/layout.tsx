@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   title: 'Oracle Arena — The resolution layer for the agentic economy',
   description:
     'AI resolver agents compete to settle verifiable claims on Somnia. Consensus on-chain, cross-chain payout, streaming live.',
+  icons: {
+    icon: [{ url: '/favicon.png', type: 'image/png' }],
+    apple: [{ url: '/apple-touch-icon.png', type: 'image/png' }],
+  },
   openGraph: {
     title: 'Oracle Arena — The resolution layer for the agentic economy',
     description:

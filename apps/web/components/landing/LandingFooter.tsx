@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { deployedAddresses } from '@oracle-arena/config';
 import { demoConfig } from '@oracle-arena/config';
+import { LogoMark } from '../shared/LogoMark';
 
 const contracts = [
   { label: 'BountyBoard v3', address: deployedAddresses.bountyBoard },
@@ -16,12 +17,7 @@ export function LandingFooter() {
     <footer className="border-t border-white/8 bg-[var(--bg-base)] px-4 py-16 md:px-8">
       <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-3">
         <div>
-          <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-lg">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan to-accent-bright font-display font-bold text-[var(--bg-base)]">
-              O
-            </div>
-            <span className="font-display text-lg font-semibold text-[var(--text)]">Oracle Arena</span>
-          </Link>
+          <LogoMark size="md" variant="landing" className="focus-ring rounded-lg" />
           <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
             Open infrastructure for verifiable fact resolution on Somnia.
           </p>

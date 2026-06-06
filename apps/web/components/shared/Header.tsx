@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { demoConfig } from '@oracle-arena/config';
+import { LogoMark } from './LogoMark';
 
 const nav = [
   { href: '/marketplace', label: 'Marketplace' },
@@ -19,17 +20,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/8 bg-navy/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
-        <Link href="/" className="group flex min-w-0 items-center gap-2 md:gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan to-ice/80 text-navy-deeper shadow-glow md:h-9 md:w-9">
-            <span className="font-display text-base font-bold md:text-lg">O</span>
-          </div>
-          <div className="min-w-0">
-            <span className="block truncate font-display text-base font-semibold text-surface-text transition-colors group-hover:text-cyan md:text-lg">
-              Oracle Arena
-            </span>
-            <span className="hidden text-xs text-surface-muted sm:block">Somnia testnet</span>
-          </div>
-        </Link>
+        <LogoMark size="sm" variant="app" />
 
         <nav className="hidden items-center gap-1 md:flex">
           {nav.map((item) => (
