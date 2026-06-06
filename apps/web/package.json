@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm --filter @oracle-arena/config --filter @oracle-arena/types run build && next build",
     "start": "next start",
     "lint": "eslint app/ lib/ components/",
     "og:generate": "pnpm exec tsx scripts/generate-og.ts"
