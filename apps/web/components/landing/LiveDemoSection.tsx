@@ -11,6 +11,8 @@ import { fetchBounty, fetchConsensusStatus } from '../../lib/contracts/bountyBoa
 import { formatSTT } from '../../lib/utils/format';
 import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
 import type { RaceEvent } from '../../lib/hooks/useRaceTimeline';
+import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
+import { SomniaPill } from '../shared/SomniaPill';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +39,7 @@ function pickTimelineEvents(events: RaceEvent[]): RaceEvent[] {
 
   return picked.length >= 3
     ? picked
-  : events.filter((e) => KIND_ORDER.includes(e.kind)).slice(0, 6);
+    : events.filter((e) => KIND_ORDER.includes(e.kind)).slice(0, 6);
 }
 
 export function LiveDemoSection() {
@@ -94,31 +96,38 @@ export function LiveDemoSection() {
   );
 
   return (
-    <section ref={sectionRef} className="border-t border-white/8 px-4 py-28 md:px-8">
+    <section ref={sectionRef} className="border-t border-white/10 bg-black px-4 py-28 md:px-8">
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-display text-4xl font-bold text-[var(--text)] md:text-5xl">
-          See it running.
-        </h2>
-        <p className="mt-4 max-w-2xl text-lg text-[var(--text-muted)]">
-          Bounty #4 settled on Somnia testnet across two resolver agents. Real LLM inference. Real
-          consensus. Real cross-chain payout.
-        </p>
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <SomniaPartnerLockup size="sm" className="mb-6" />
+            <h2 className="somnia-headline text-3xl md:text-5xl">See it running.</h2>
+            <p className="mt-4 max-w-2xl text-lg text-[var(--text-muted)]">
+              Bounty #4 settled on Somnia testnet across two resolver agents. Real LLM inference.
+              Real consensus. Real cross-chain payout.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <SomniaPill label="inferToolsChat" dot="purple" />
+            <SomniaPill label="Consensus" dot="green" />
+            <SomniaPill label="LI.FI pattern" dot="cyan" />
+          </div>
+        </div>
 
         <div className="mt-14 overflow-x-auto pb-4">
-          <div className="flex min-w-[640px] items-start gap-0">
+          <div className="flex min-w-[640px] items-start gap-0 border border-white/10 bg-[var(--bg-card)] p-6">
             {loading ? (
               <p className="text-sm text-[var(--text-muted)]">Loading on-chain timeline…</p>
             ) : (
               events.map((ev, i) => (
                 <div key={ev.id} data-demo-event className="relative flex flex-1 flex-col items-center px-2">
                   {i > 0 ? (
-                    <div
-                      className="absolute left-0 top-3 h-px w-full -translate-x-1/2 bg-cyan/30"
-                      aria-hidden
-                    />
+                    <div className="absolute left-0 top-3 h-px w-full -translate-x-1/2 bg-white/20" aria-hidden />
                   ) : null}
-                  <div className="relative z-10 h-3 w-3 rounded-full bg-cyan shadow-[0_0_12px_var(--accent-glow)]" />
-                  <p className="mt-4 text-center text-xs font-medium text-[var(--text)]">{ev.label}</p>
+                  <div className="relative z-10 h-2 w-2 rounded-full bg-[#F2F2F2]" />
+                  <p className="mt-4 text-center text-xs font-medium uppercase tracking-wider text-[var(--text)]">
+                    {ev.label}
+                  </p>
                   {ev.detail ? (
                     <p className="mt-1 max-w-[140px] text-center text-[10px] leading-snug text-[var(--text-dim)]">
                       {ev.detail.slice(0, 80)}
@@ -131,10 +140,7 @@ export function LiveDemoSection() {
         </div>
 
         <div className="mt-12 text-center md:text-left">
-          <Link
-            href={`/bounty/${demoConfig.bountyId}`}
-            className="focus-ring neon-glow inline-block rounded-xl bg-cyan px-10 py-4 text-lg font-semibold text-[var(--bg-base)] transition-transform hover:scale-[1.02]"
-          >
+          <Link href={`/bounty/${demoConfig.bountyId}`} className="somnia-btn-primary">
             View the full race →
           </Link>
         </div>

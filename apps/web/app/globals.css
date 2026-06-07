@@ -4,18 +4,25 @@
 
 @layer base {
   :root {
-    --bg-base: #050b1e;
-    --bg-elevated: #0b1437;
-    --bg-card: #111b3d;
-    --accent: #5eead4;
-    --accent-bright: #67ffe8;
-    --accent-dim: #2dd4bf;
-    --accent-glow: rgba(94, 234, 212, 0.4);
-    --text: #e2e8f0;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
-    --purple-accent: #a78bfa;
-    --success: #34d399;
+    --bg-base: #000000;
+    --bg-elevated: #0a0a0a;
+    --bg-card: #0a0a0a;
+    --bg-muted: #141414;
+    --accent: #f2f2f2;
+    --accent-bright: #ffffff;
+    --accent-dim: #a3a3a3;
+    --accent-glow: rgba(242, 242, 242, 0.12);
+    --text: #f2f2f2;
+    --text-muted: #a3a3a3;
+    --text-dim: #737373;
+    --purple-accent: #7c3aed;
+    --purple-dim: #5b21b6;
+    --somnia-green: #22c55e;
+    --somnia-pink: #ec4899;
+    --somnia-cyan: #22d3ee;
+    --success: #f2f2f2;
+    --border: rgba(255, 255, 255, 0.14);
+    --border-strong: rgba(255, 255, 255, 0.28);
   }
 
   html {
@@ -23,15 +30,12 @@
   }
 
   body {
-    @apply bg-navy font-sans text-surface-text antialiased;
+    @apply bg-black font-sans text-white antialiased;
     background-color: var(--bg-base);
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 234, 212, 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(202, 220, 252, 0.04), transparent);
   }
 
   ::selection {
-    @apply bg-cyan/30 text-white;
+    @apply bg-white/20 text-white;
   }
 }
 
@@ -41,12 +45,11 @@
   }
 
   .neon-glow {
-    filter: drop-shadow(0 0 8px var(--accent-glow)) drop-shadow(0 0 16px var(--accent-glow));
+    filter: drop-shadow(0 0 12px var(--accent-glow));
   }
 
   .neon-glow-success {
-    filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.45))
-      drop-shadow(0 0 16px rgba(52, 211, 153, 0.25));
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
   }
 
   .landing-bg {
@@ -56,5 +59,33 @@
   .focus-ring:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent);
+  }
+
+  .somnia-label {
+    @apply text-xs font-medium uppercase tracking-[0.28em] text-[var(--text-muted)];
+  }
+
+  .somnia-headline {
+    @apply font-sans font-semibold tracking-tight text-white;
+  }
+
+  .somnia-wordmark {
+    @apply font-sans text-xs font-medium uppercase tracking-[0.32em] text-white;
+  }
+
+  .somnia-card {
+    @apply rounded-none border border-[var(--border)] bg-[var(--bg-card)];
+  }
+
+  .somnia-btn-primary {
+    @apply focus-ring inline-flex items-center justify-center rounded-none border border-[#F2F2F2] bg-[#F2F2F2] px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-black transition-opacity hover:opacity-90;
+  }
+
+  .somnia-btn-secondary {
+    @apply focus-ring inline-flex items-center justify-center rounded-none border border-[var(--border-strong)] bg-transparent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-[#F2F2F2] transition-colors hover:bg-white/5;
+  }
+
+  .somnia-partner-strip {
+    @apply flex flex-wrap items-center justify-between gap-4 border border-[var(--border)] bg-black px-4 py-3 md:px-6;
   }
 }

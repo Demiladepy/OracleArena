@@ -1,15 +1,15 @@
-/** Design tokens — neon cyan on deep navy (landing + global CSS vars) */
+/** Design tokens — Somnia Network aesthetic: pure black, white type, purple accent */
 export const landingTheme = {
-  bgBase: '#050B1E',
-  bgElevated: '#0B1437',
-  bgCard: '#111B3D',
-  accent: '#5EEAD4',
-  accentBright: '#67FFE8',
-  accentDim: '#2DD4BF',
-  accentGlow: 'rgba(94, 234, 212, 0.4)',
-  text: '#E2E8F0',
-  textMuted: '#94A3B8',
-  textDim: '#64748B',
-  purpleAccent: '#A78BFA',
-  success: '#34D399',
+  bgBase: '#000000',
+  bgElevated: '#0A0A0A',
+  bgCard: '#111111',
+  accent: '#FFFFFF',
+  accentBright: '#FFFFFF',
+  accentDim: '#A3A3A3',
+  accentGlow: 'rgba(255, 255, 255, 0.12)',
+  text: '#FFFFFF',
+  textMuted: '#A3A3A3',
+  textDim: '#737373',
+  purpleAccent: '#7C3AED',
+  success: '#FFFFFF',
 } as const;

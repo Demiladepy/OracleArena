@@ -7,7 +7,10 @@ import { useGSAP } from '@gsap/react';
 import { useMarketStats } from '../../lib/hooks/useMarketStats';
 import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
 import { LandingNav } from './LandingNav';
-import { HeroParticles } from './HeroParticles';
+import { SomniaIsometricAccent } from './SomniaIsometricAccent';
+import { SomniaPixelGrid } from './SomniaPixelGrid';
+import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
+import { SomniaPill } from '../shared/SomniaPill';
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -42,51 +45,42 @@ export function HeroSection() {
     { scope: sectionRef, dependencies: [reduced] },
   );
 
-  const headlineWords = ['The', 'resolution', 'layer', 'for', 'the'];
-  const accentWords = ['agentic', 'economy'];
+  const headlineWords = ['The', 'resolution', 'layer', 'for', 'the', 'agentic', 'economy'];
 
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-[100dvh] flex-col justify-center overflow-hidden landing-bg px-4 pb-20 pt-24 md:px-8"
+      className="relative flex min-h-[100dvh] flex-col justify-center overflow-hidden bg-black px-4 pb-20 pt-24 md:px-8"
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 50% at 85% 15%, rgba(94, 234, 212, 0.12), transparent 55%)',
-        }}
-      />
-      <HeroParticles />
+      <SomniaPixelGrid />
+      <SomniaIsometricAccent />
       <LandingNav />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center md:text-left">
-        <p
-          data-hero
-          className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan"
-        >
-          Somnia testnet · live
+        <div data-hero className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
+          <SomniaPartnerLockup size="lg" />
+          <div className="flex flex-wrap justify-center gap-2 md:justify-end">
+            <SomniaPill label="Testnet" dot="green" />
+            <SomniaPill label="Agents" dot="purple" />
+            <SomniaPill label="Live" dot="white" />
+          </div>
+        </div>
+
+        <p data-hero className="somnia-label mt-10">
+          Oracle Arena · resolution layer
         </p>
 
-        <h1 className="mt-6 font-display text-[2.5rem] font-bold leading-[1.1] text-[var(--text)] md:text-6xl lg:text-[4rem]">
+        <h1 className="somnia-headline mt-6 text-[2rem] leading-[1.05] md:text-6xl lg:text-[4rem]">
           {headlineWords.map((w) => (
-            <span key={w} data-hero-word className="mr-[0.25em] inline-block">
+            <span key={w} data-hero-word className="mr-[0.22em] inline-block">
               {w}
             </span>
           ))}
-          <span className="block md:inline">
-            {accentWords.map((w) => (
-              <span key={w} data-hero-word className="mr-[0.25em] inline-block text-cyan">
-                {w}
-              </span>
-            ))}
-          </span>
         </h1>
 
         <p
           data-hero
-          className="mx-auto mt-6 max-w-xl text-lg text-[var(--text-muted)] md:mx-0 md:text-[1.125rem]"
+          className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-[var(--text-muted)] md:mx-0 md:text-lg"
         >
           AI agents compete to resolve verifiable facts. Consensus on-chain. Settlement cross-chain.
           Streaming live.
@@ -94,41 +88,27 @@ export function HeroSection() {
 
         <div
           data-hero
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-start"
+          className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-start"
         >
-          <Link
-            href="/bounty/4"
-            className="focus-ring neon-glow w-full rounded-xl bg-cyan px-8 py-3.5 text-center text-base font-semibold text-[var(--bg-base)] transition-transform hover:scale-[1.02] sm:w-auto"
-          >
+          <Link href="/bounty/4" className="somnia-btn-primary w-full sm:w-auto">
             View live demo
           </Link>
-          <Link
-            href="/marketplace"
-            className="focus-ring w-full rounded-xl border border-cyan/50 bg-transparent px-8 py-3.5 text-center text-base font-medium text-cyan transition-colors hover:border-cyan hover:bg-cyan/5 sm:w-auto"
-          >
+          <Link href="/marketplace" className="somnia-btn-secondary w-full sm:w-auto">
             Explore marketplace
           </Link>
         </div>
 
-        <p data-hero className="mt-8 text-sm text-[var(--text-muted)]">
-          <span className="font-mono text-cyan">{stats.loading ? '…' : stats.totalBounties}</span>{' '}
-          bounties ·{' '}
-          <span className="font-mono text-cyan">{stats.loading ? '…' : stats.totalResolvers}</span>{' '}
-          resolvers ·{' '}
-          <span className="font-mono text-cyan">{stats.loading ? '…' : stats.totalResolved}</span>{' '}
-          resolved
+        <p data-hero className="mt-10 text-sm text-[var(--text-dim)]">
+          <span className="font-mono text-white">{stats.loading ? '…' : stats.totalBounties}</span> bounties ·{' '}
+          <span className="font-mono text-white">{stats.loading ? '…' : stats.totalResolvers}</span> resolvers ·{' '}
+          <span className="font-mono text-white">{stats.loading ? '…' : stats.totalResolved}</span> resolved
         </p>
       </div>
 
-      <div className="absolute bottom-8 left-0 right-0 z-10 flex flex-col items-center gap-2 text-center">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-dim)]">
-          Scroll to see how it works
-        </p>
-        <span
-          className="inline-block animate-bounce text-cyan"
-          style={{ animationDuration: '2s' }}
-          aria-hidden
-        >
+      <div className="absolute bottom-8 left-0 right-0 z-10 flex flex-col items-center gap-3 text-center">
+        <p className="somnia-wordmark text-[var(--text-dim)]">Oracle Arena</p>
+        <p className="text-[10px] uppercase tracking-[0.24em] text-[var(--text-dim)]">Scroll to see how it works</p>
+        <span className="inline-block animate-bounce text-white/50" style={{ animationDuration: '2s' }} aria-hidden>
           ↓
         </span>
       </div>

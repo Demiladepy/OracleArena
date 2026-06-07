@@ -5,6 +5,7 @@ import { HeroSection } from '../landing/HeroSection';
 import { ProblemSection } from '../landing/ProblemSection';
 import { PrimitivesSection } from '../landing/PrimitivesSection';
 import { LiveDemoSection } from '../landing/LiveDemoSection';
+import { SomniaVisualStrip } from '../landing/SomniaVisualStrip';
 import { LandingFooter } from '../landing/LandingFooter';
 import { Skeleton } from '../ui/Skeleton';
 
@@ -25,6 +26,7 @@ export function LandingView() {
     <div className="landing-bg min-h-screen text-[var(--text)]">
       <HeroSection />
       <ProblemSection />
+      <SomniaVisualStrip />
       <ArchitectureSection />
       <PrimitivesSection />
       <LiveDemoSection />

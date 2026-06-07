@@ -6,17 +6,16 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary:
-    'bg-cyan text-navy-deeper hover:bg-cyan-dim shadow-glow font-medium',
+  primary: 'bg-white text-black hover:bg-white/90 font-medium border border-white',
   secondary:
-    'bg-navy-elevated text-surface-text border border-white/10 hover:border-cyan/40 hover:bg-navy-elevated/80',
-  ghost: 'text-surface-muted hover:text-cyan hover:bg-white/5',
+    'bg-transparent text-white border border-white/25 hover:border-white/50 hover:bg-white/5',
+  ghost: 'text-surface-muted hover:text-white hover:bg-white/5',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg',
-  md: 'px-5 py-2.5 text-sm rounded-xl',
-  lg: 'px-7 py-3.5 text-base rounded-xl',
+  sm: 'px-3 py-1.5 text-sm rounded-none',
+  md: 'px-5 py-2.5 text-sm rounded-none',
+  lg: 'px-7 py-3.5 text-base rounded-none',
 };
 
 export function Button({

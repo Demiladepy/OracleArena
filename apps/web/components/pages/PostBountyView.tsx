@@ -178,7 +178,7 @@ export function PostBountyView() {
     : `${formatSTT(payoutWei)} payout + gas TBD`;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 md:px-6 md:py-14">
         <h1 className="font-display text-3xl text-surface-text">Post a bounty</h1>
@@ -209,7 +209,7 @@ export function PostBountyView() {
               rows={4}
               maxLength={MAX_CLAIM}
               placeholder="State a verifiable fact resolvers can investigate…"
-              className="mt-2 w-full rounded-xl border border-white/10 bg-navy-elevated/80 px-4 py-3 text-sm text-surface-text placeholder:text-surface-muted focus:border-cyan/40 focus:outline-none"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)]/80 px-4 py-3 text-sm text-surface-text placeholder:text-surface-muted focus:border-cyan/40 focus:outline-none"
             />
             <p className="mt-1 text-xs text-surface-muted">
               {claim.length}/{MAX_CLAIM} · min {MIN_CLAIM} characters
@@ -232,7 +232,7 @@ export function PostBountyView() {
                       setEvidence(next);
                     }}
                     placeholder="https://…"
-                    className="min-w-0 flex-1 rounded-lg border border-white/10 bg-navy-elevated/80 px-3 py-2 text-sm focus:border-cyan/40 focus:outline-none"
+                    className="min-w-0 flex-1 rounded-lg border border-white/10 bg-[var(--bg-card)]/80 px-3 py-2 text-sm focus:border-cyan/40 focus:outline-none"
                   />
                   {evidence.length > 1 ? (
                     <Button
@@ -266,7 +266,7 @@ export function PostBountyView() {
             </label>
             <select
               disabled
-              className="mt-2 w-full rounded-xl border border-white/10 bg-navy-elevated/80 px-4 py-3 text-sm text-surface-text"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)]/80 px-4 py-3 text-sm text-surface-text"
             >
               <option>URL_RESOLVABLE_FACT (MVP)</option>
             </select>
@@ -282,7 +282,7 @@ export function PostBountyView() {
                 type="datetime-local"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-navy-elevated/80 px-4 py-3 text-sm focus:border-cyan/40 focus:outline-none"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)]/80 px-4 py-3 text-sm focus:border-cyan/40 focus:outline-none"
               />
             </div>
             <div>
@@ -295,12 +295,12 @@ export function PostBountyView() {
                 step="0.01"
                 value={payoutStt}
                 onChange={(e) => setPayoutStt(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-navy-elevated/80 px-4 py-3 text-sm font-mono focus:border-cyan/40 focus:outline-none"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)]/80 px-4 py-3 text-sm font-mono focus:border-cyan/40 focus:outline-none"
               />
             </div>
           </section>
 
-          <Card className="bg-navy-elevated/40">
+          <Card className="bg-[var(--bg-card)]/40">
             <p className="text-xs uppercase tracking-widest text-surface-muted">Gas estimate</p>
             <p className="mt-1 font-mono text-sm text-surface-text">
               {gasEstimate ? `~${Number(gasStt).toFixed(6)} STT` : 'Connect wallet & complete form'}

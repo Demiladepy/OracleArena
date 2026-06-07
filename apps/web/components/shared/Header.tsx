@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { demoConfig } from '@oracle-arena/config';
 import { LogoMark } from './LogoMark';
+import { SomniaPartnerLockup } from './SomniaPartnerLockup';
 
 const nav = [
   { href: '/marketplace', label: 'Marketplace' },
@@ -18,7 +19,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/8 bg-navy/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
         <LogoMark size="sm" variant="app" />
 
@@ -27,7 +28,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-sm text-surface-muted transition-colors hover:bg-white/5 hover:text-cyan"
+              className="rounded-none px-3 py-2 text-sm uppercase tracking-wider text-surface-muted transition-colors hover:bg-white/5 hover:text-white"
             >
               {item.label}
             </Link>
@@ -61,7 +62,7 @@ export function Header() {
                 <Link
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-lg px-3 py-2.5 text-sm text-surface-muted hover:bg-white/5 hover:text-cyan"
+                  className="block rounded-none px-3 py-2.5 text-sm uppercase tracking-wider text-surface-muted hover:bg-white/5 hover:text-white"
                 >
                   {item.label}
                 </Link>
@@ -70,6 +71,13 @@ export function Header() {
           </ul>
         </nav>
       ) : null}
+
+      <div className="somnia-partner-strip hidden border-x-0 md:flex">
+        <SomniaPartnerLockup size="sm" />
+        <p className="text-xs uppercase tracking-[0.2em] text-surface-muted">
+          Native on Somnia testnet · Chain 50312
+        </p>
+      </div>
     </header>
   );
 }

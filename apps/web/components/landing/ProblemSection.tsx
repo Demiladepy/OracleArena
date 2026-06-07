@@ -65,12 +65,12 @@ export function ProblemSection() {
   return (
     <section
       ref={sectionRef}
-      className="flex min-h-screen flex-col justify-center px-4 py-24 md:px-8"
+      className="flex min-h-screen flex-col justify-center border-t border-white/10 bg-black px-4 py-24 md:px-8"
     >
       <div className="mx-auto max-w-6xl">
         <h2
           data-problem-heading
-          className="max-w-3xl font-display text-3xl font-bold leading-tight text-[var(--text)] md:text-[2.5rem]"
+          className="max-w-3xl somnia-headline text-3xl leading-tight md:text-[2.5rem]"
         >
           AI agents can act. Nobody trusts them when money&apos;s on the line.
         </h2>
@@ -84,10 +84,10 @@ export function ProblemSection() {
             <article
               key={c.title}
               data-problem-card
-              className="rounded-2xl border border-white/6 bg-[var(--bg-card)] p-6 pl-5"
-              style={{ borderLeftWidth: 3, borderLeftColor: 'var(--accent)' }}
+              className="somnia-card p-6 pl-5"
+              style={{ borderLeftWidth: 3, borderLeftColor: 'var(--purple-accent)' }}
             >
-              <h3 className="font-display text-xl font-bold text-[var(--text)]">{c.title}</h3>
+              <h3 className="somnia-headline text-xl">{c.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">{c.body}</p>
             </article>
           ))}

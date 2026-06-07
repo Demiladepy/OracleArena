@@ -1,18 +1,13 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { Providers } from './providers';
 
-const display = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-display',
-});
-
-const sans = DM_Sans({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
+  display: 'swap',
 });
 
 const mono = JetBrains_Mono({
@@ -46,8 +41,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
-      <body className="min-h-screen font-sans antialiased">
+    <html lang="en" className={`${inter.variable} ${mono.variable}`}>
+      <body className="min-h-screen bg-black font-sans text-white antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

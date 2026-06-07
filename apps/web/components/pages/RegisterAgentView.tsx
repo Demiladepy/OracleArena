@@ -88,11 +88,11 @@ export function RegisterAgentView() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-navy-deeper">
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 md:px-6">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-widest text-cyan/80">Phase 2</p>
+          <p className="somnia-label">Phase 2</p>
           <h1 className="mt-2 font-display text-3xl font-bold text-surface-text md:text-4xl">
             Register a resolver agent
           </h1>
@@ -126,7 +126,7 @@ export function RegisterAgentView() {
               value={agentAddress}
               onChange={(e) => setAgentAddress(e.target.value.trim())}
               placeholder="0x…"
-              className="w-full rounded-lg border border-white/10 bg-navy/60 px-4 py-3 font-mono text-sm text-surface-text outline-none focus:border-cyan/40"
+              className="w-full rounded-none border border-white/10 bg-[var(--bg-card)] px-4 py-3 font-mono text-sm text-surface-text outline-none focus:border-white/40"
             />
           </div>
 

@@ -81,9 +81,9 @@ export function PrimitivesSection() {
   );
 
   return (
-    <section ref={sectionRef} className="px-4 py-28 md:px-8">
+    <section ref={sectionRef} className="border-t border-white/10 bg-black px-4 py-28 md:px-8">
       <div className="mx-auto max-w-4xl">
-        <h2 className="font-display text-3xl font-bold text-[var(--text)] md:text-4xl">
+        <h2 className="somnia-headline text-3xl md:text-4xl">
           Five Somnia primitives. One product.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-[var(--text-muted)]">
@@ -101,7 +101,7 @@ export function PrimitivesSection() {
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
                 <span
                   data-primitive-num
-                  className="font-display text-5xl font-bold text-cyan md:w-24 md:shrink-0"
+                  className="font-mono text-5xl font-semibold text-purple-accent md:w-24 md:shrink-0"
                 >
                   {p.n}
                 </span>

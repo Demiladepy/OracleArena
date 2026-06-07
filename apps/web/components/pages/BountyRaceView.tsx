@@ -24,7 +24,7 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-black">
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 md:px-6">
           <Skeleton className="mb-8 h-40" />
@@ -37,7 +37,7 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
 
   if (error || !bounty) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-black">
         <Header />
         <main className="mx-auto max-w-3xl flex-1 px-4 py-20 text-center">
           <h1 className="font-display text-2xl text-surface-text">Bounty not found</h1>
@@ -56,7 +56,7 @@ export function BountyRaceView({ bountyId }: { bountyId: bigint }) {
   );
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 md:px-6 md:py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">

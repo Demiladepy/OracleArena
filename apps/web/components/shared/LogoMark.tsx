@@ -26,8 +26,8 @@ export function LogoMark({
   const s = sizeClasses[size];
   const titleClass =
     variant === 'landing'
-      ? 'text-[var(--text)] group-hover:text-cyan'
-      : 'text-surface-text group-hover:text-cyan';
+      ? 'text-[var(--text)] group-hover:text-white'
+      : 'text-surface-text group-hover:text-white';
   const subClass = variant === 'landing' ? 'text-[var(--text-muted)]' : 'text-surface-muted';
 
   const content = (

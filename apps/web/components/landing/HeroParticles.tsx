@@ -42,7 +42,7 @@ export function HeroParticles() {
         if (d.y < 0 || d.y > 1) d.vy *= -1;
         ctx.beginPath();
         ctx.arc(d.x * el.width, d.y * el.height, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(94, 234, 212, 0.35)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);

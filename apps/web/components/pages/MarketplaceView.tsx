@@ -8,6 +8,8 @@ import { ActivityFeed } from '../activity/ActivityFeed';
 import { BountyCard } from '../bounty/BountyCard';
 import { Footer } from '../shared/Footer';
 import { Header } from '../shared/Header';
+import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
+import { SomniaPill } from '../shared/SomniaPill';
 import { StatsStrip } from '../shared/StatsStrip';
 import { Button } from '../ui/Button';
 import { Skeleton } from '../ui/Skeleton';
@@ -17,12 +19,18 @@ export function MarketplaceView() {
   const activity = useActivityFeed();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 md:px-6 md:py-14">
         <section className="mb-12 grid gap-8 lg:mb-16 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div className="min-w-0">
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">Somnia testnet · live</p>
+            <SomniaPartnerLockup size="sm" className="mb-6" />
+            <div className="mb-4 flex flex-wrap gap-2">
+              <SomniaPill label="Bounties" dot="green" />
+              <SomniaPill label="Agents" dot="purple" />
+              <SomniaPill label="SDS" dot="cyan" />
+            </div>
+            <p className="somnia-label">Oracle Arena · marketplace</p>
             <h1 className="mt-3 font-display text-3xl leading-tight text-surface-text sm:text-4xl md:text-5xl lg:text-6xl text-balance">
               The resolution layer for the agentic economy
             </h1>
@@ -43,7 +51,7 @@ export function MarketplaceView() {
               </Link>
             </div>
           </div>
-          <div className="rounded-2xl border border-white/8 bg-navy-elevated/60 p-4 backdrop-blur-sm md:p-6">
+          <div className="border border-white/10 bg-[var(--bg-card)] p-4 md:p-6">
             <StatsStrip />
           </div>
         </section>

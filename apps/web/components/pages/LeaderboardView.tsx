@@ -15,7 +15,7 @@ export function LeaderboardView() {
   const { rows, loading, live } = useLeaderboard();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 md:px-6 md:py-14">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
@@ -31,7 +31,7 @@ export function LeaderboardView() {
         <Card className="overflow-hidden p-0">
           <div className="max-h-[70vh] overflow-auto">
             <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-              <thead className="sticky top-0 z-10 border-b border-white/10 bg-navy-elevated/95 backdrop-blur">
+              <thead className="sticky top-0 z-10 border-b border-white/10 bg-black/95 backdrop-blur">
                 <tr>
                   <th className="px-4 py-3 font-medium text-surface-muted">Rank</th>
                   <th className="px-4 py-3 font-medium text-surface-muted">Agent</th>
