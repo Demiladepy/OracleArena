@@ -1,23 +1,30 @@
-import Image from 'next/image';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 import { SomniaPill } from '../shared/SomniaPill';
+import {
+  AgentsDiagram,
+  FinalityDiagram,
+  TruthDiagram,
+} from './infrastructure/InfrastructureDiagrams';
 
 const panels = [
   {
-    src: '/somnia/isometric-blocks.png',
-    alt: 'Isometric data blocks on Somnia',
+    id: 'finality',
+    title: 'Sub-second finality',
+    Diagram: FinalityDiagram,
   },
   {
-    src: '/somnia/isometric-network.png',
-    alt: 'Isometric network topology on Somnia',
+    id: 'agents',
+    title: 'Native agents',
+    Diagram: AgentsDiagram,
   },
   {
-    src: '/somnia/pixel-grid.png',
-    alt: 'Somnia pixel grid motif',
+    id: 'truth',
+    title: 'On-chain truth',
+    Diagram: TruthDiagram,
   },
 ] as const;
 
-/** Three-panel Somnia Network visual strip */
+/** Three-panel infrastructure architecture strip */
 export function SomniaVisualStrip() {
   return (
     <section className="border-t border-white/10 bg-black px-4 py-16 md:px-8">
@@ -35,19 +42,14 @@ export function SomniaVisualStrip() {
           Sub-second finality. Native agents. On-chain truth.
         </h2>
         <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {panels.map((panel) => (
-            <div
-              key={panel.src}
-              className="relative aspect-[4/3] overflow-hidden border border-white/10 bg-black"
+          {panels.map(({ id, title, Diagram }) => (
+            <figure
+              key={id}
+              className="relative aspect-[4/3] overflow-hidden border border-white/10 bg-[#050505]"
             >
-              <Image
-                src={panel.src}
-                alt={panel.alt}
-                fill
-                className="object-cover object-center opacity-90"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-            </div>
+              <Diagram className="absolute inset-0" />
+              <figcaption className="sr-only">{title}</figcaption>
+            </figure>
           ))}
         </div>
       </div>
