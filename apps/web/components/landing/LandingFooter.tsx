@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { deployedAddresses } from '@oracle-arena/config';
 import { demoConfig } from '@oracle-arena/config';
-import { LogoMark } from '../shared/LogoMark';
+import { LogoLockup } from '../shared/LogoLockup';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 
 const contracts = [
@@ -18,7 +18,7 @@ export function LandingFooter() {
     <footer className="border-t border-white/8 bg-[var(--bg-base)] px-4 py-16 md:px-8">
       <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-3">
         <div>
-          <LogoMark size="md" variant="landing" className="focus-ring rounded-lg" />
+          <LogoLockup size="md" className="focus-ring rounded-lg" />
           <div className="mt-6 border border-white/10 bg-black p-4">
             <p className="somnia-label mb-3">Built on</p>
             <SomniaPartnerLockup size="sm" />

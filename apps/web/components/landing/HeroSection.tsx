@@ -9,6 +9,7 @@ import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
 import { LandingNav } from './LandingNav';
 import { SomniaIsometricAccent } from './SomniaIsometricAccent';
 import { SomniaPixelGrid } from './SomniaPixelGrid';
+import { LogoLockup } from '../shared/LogoLockup';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 import { SomniaPill } from '../shared/SomniaPill';
 
@@ -57,8 +58,12 @@ export function HeroSection() {
       <LandingNav />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center md:text-left">
+        <div data-hero className="mb-8 flex justify-center md:justify-start">
+          <LogoLockup size="lg" />
+        </div>
+
         <div data-hero className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
-          <SomniaPartnerLockup size="lg" />
+          <SomniaPartnerLockup size="sm" />
           <div className="flex flex-wrap justify-center gap-2 md:justify-end">
             <SomniaPill label="Testnet" dot="green" />
             <SomniaPill label="Agents" dot="purple" />

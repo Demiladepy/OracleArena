@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { OracleArenaWordmark } from './OracleArenaWordmark';
 
 type LogoMarkProps = {
   showWordmark?: boolean;
@@ -11,11 +12,12 @@ type LogoMarkProps = {
 };
 
 const sizeClasses = {
-  sm: { image: 'h-8 w-8 md:h-9 md:w-9', text: 'text-base md:text-lg', sub: 'text-xs' },
-  md: { image: 'h-9 w-9', text: 'text-lg', sub: 'text-xs' },
-  lg: { image: 'h-11 w-11', text: 'text-xl', sub: 'text-sm' },
+  sm: { image: 'h-8 w-8 md:h-9 md:w-9', wordmark: 'sm' as const, sub: 'text-xs' },
+  md: { image: 'h-9 w-9', wordmark: 'md' as const, sub: 'text-xs' },
+  lg: { image: 'h-11 w-11', wordmark: 'lg' as const, sub: 'text-sm' },
 } as const;
 
+/** Icon-only or icon + wordmark for app chrome */
 export function LogoMark({
   showWordmark = true,
   size = 'sm',
@@ -24,34 +26,23 @@ export function LogoMark({
   href = '/',
 }: LogoMarkProps) {
   const s = sizeClasses[size];
-  const titleClass =
-    variant === 'landing'
-      ? 'text-[var(--text)] group-hover:text-white'
-      : 'text-surface-text group-hover:text-white';
   const subClass = variant === 'landing' ? 'text-[var(--text-muted)]' : 'text-surface-muted';
 
   const content = (
     <>
-      <div
-        className={clsx(
-          'relative shrink-0 overflow-hidden rounded-full ring-1 ring-amber-900/50 ring-offset-1 ring-offset-transparent shadow-glow',
-          s.image,
-        )}
-      >
+      <div className={clsx('relative shrink-0 overflow-hidden rounded-lg bg-black', s.image)}>
         <Image
           src="/logo.png"
-          alt="Oracle Arena — Opon Ifa mark"
+          alt="Oracle Arena"
           fill
-          className="object-cover"
+          className="object-contain p-0.5"
           sizes="44px"
           priority={size === 'lg'}
         />
       </div>
       {showWordmark ? (
         <div className="min-w-0">
-          <span className={clsx('block truncate font-display font-semibold transition-colors', titleClass, s.text)}>
-            Oracle Arena
-          </span>
+          <OracleArenaWordmark size={s.wordmark} />
           {size === 'sm' && variant === 'app' ? (
             <span className={clsx('hidden sm:block', subClass, s.sub)}>Somnia testnet</span>
           ) : null}

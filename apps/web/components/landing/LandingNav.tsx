@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { demoConfig } from '@oracle-arena/config';
-import { LogoMark } from '../shared/LogoMark';
+import { LogoLockup } from '../shared/LogoLockup';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 
 const links = [
@@ -16,7 +16,7 @@ export function LandingNav() {
   return (
     <nav className="absolute left-0 right-0 top-0 z-20 px-4 py-5 md:px-8">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <LogoMark size="md" variant="landing" className="focus-ring rounded-lg" />
+        <LogoLockup size="md" className="focus-ring rounded-lg" />
         <div className="hidden items-center gap-6 md:flex">
           <SomniaPartnerLockup size="sm" />
           <div className="flex items-center gap-1">

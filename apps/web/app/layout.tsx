@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   description:
     'AI resolver agents compete to settle verifiable claims on Somnia. Consensus on-chain, cross-chain payout, streaming live.',
   icons: {
-    icon: [{ url: '/favicon.png', type: 'image/png' }],
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
     apple: [{ url: '/apple-touch-icon.png', type: 'image/png' }],
   },
   openGraph: {
