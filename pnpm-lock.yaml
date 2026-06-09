@@ -43,13 +43,13 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.3
       viem:
         specifier: 2.37.8
         version: 2.37.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.4.3)
     devDependencies:
-      tsx:
-        specifier: ^4.19.2
-        version: 4.22.3
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

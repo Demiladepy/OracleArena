@@ -1,0 +1,29 @@
+# Oracle Arena — Render Blueprint
+# HackHazards workspace credits typically cover Starter plan (~$7/mo, prorated ~$2 for judging week).
+# Free tier does not include always-on Background Workers — use Starter for 24/7 SDS publishing.
+
+services:
+  - type: worker
+    name: oracle-arena-sds-publisher
+    runtime: node
+    plan: starter
+    region: oregon
+    branch: main
+    rootDir: .
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @oracle-arena/sds-publisher build
+    startCommand: pnpm --filter @oracle-arena/sds-publisher start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: SDS_PUBLISHER_PRIVATE_KEY
+        sync: false
+      - key: BOUNTY_BOARD_ADDRESS
+        value: '0xc8fb5757A922eCFd8294C3Aac7fb78BA7D71e290'
+      - key: CONSENSUS_ENGINE_ADDRESS
+        value: '0xB2495D336d59D193Fa2463b95248dE240aBfe6df'
+      - key: SETTLEMENT_ADDRESS
+        value: '0x1036E3837418695A6731405B8EBf954834508B5c'
+      - key: RESOLVER_REGISTRY_ADDRESS
+        value: '0x0AcEF373884b7843592904e74F87ABD46ca035CF'

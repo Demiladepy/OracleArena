@@ -12,18 +12,29 @@ async function main() {
   console.log('  submissions:', ids.submissions);
   console.log('  resolvers:', ids.resolvers);
   console.log('  settlements:', ids.settlements);
+  console.log('  appeals:', ids.appeals);
 
+  const pending = [];
   for (const entry of ALL_SCHEMAS) {
-    const schemaId = await sdk.streams.computeSchemaId(entry.schema);
+    const schemaId = (await sdk.streams.computeSchemaId(entry.schema)) as `0x${string}`;
     const registered = await sdk.streams.isDataSchemaRegistered(schemaId);
     console.log(`  ${entry.schemaName}: registered=${registered}`);
+    if (!registered) {
+      pending.push(entry);
+    }
   }
 
+  if (pending.length === 0) {
+    console.log('All schemas already registered — skipping registerDataSchemas');
+    return;
+  }
+
+  console.log(`Registering ${pending.length} schema(s)...`);
   const tx = await sdk.streams.registerDataSchemas(
-    ALL_SCHEMAS.map((entry) => ({
+    pending.map((entry) => ({
       schemaName: entry.schemaName,
       schema: entry.schema,
-      parentSchemaId: zeroBytes32,
+      parentSchemaId: zeroBytes32 as `0x${string}`,
     })),
     true,
   );

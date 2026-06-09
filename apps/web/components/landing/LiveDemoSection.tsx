@@ -10,6 +10,7 @@ import { fetchHistoricalRaceEvents } from '../../lib/contracts/raceHistory';
 import { fetchBounty, fetchConsensusStatus } from '../../lib/contracts/bountyBoard';
 import { formatSTT } from '../../lib/utils/format';
 import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
+import { killSectionScrollTriggers } from '../../lib/gsap/landingScroll';
 import type { RaceEvent } from '../../lib/hooks/useRaceTimeline';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 import { SomniaPill } from '../shared/SomniaPill';
@@ -81,16 +82,18 @@ export function LiveDemoSection() {
       const dots = sectionRef.current.querySelectorAll('[data-demo-event]');
       gsap.fromTo(
         dots,
-        { opacity: 0, x: -24 },
+        { opacity: 0, x: -20 },
         {
           opacity: 1,
           x: 0,
           duration: 0.45,
-          stagger: 0.12,
+          stagger: 0.1,
           ease: 'power2.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%', once: true },
         },
       );
+
+      return () => killSectionScrollTriggers(sectionRef.current);
     },
     { scope: sectionRef, dependencies: [reduced, events.length] },
   );

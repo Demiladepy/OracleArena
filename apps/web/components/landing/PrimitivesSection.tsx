@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
+import { killSectionScrollTriggers, revealOnScroll } from '../../lib/gsap/landingScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,27 +56,35 @@ export function PrimitivesSection() {
         const text = row.querySelector('[data-primitive-text]');
         gsap.fromTo(
           num,
-          { opacity: 0, x: -40 },
+          { opacity: 0, x: -28 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.5,
+            duration: 0.45,
             ease: 'power2.out',
-            scrollTrigger: { trigger: row, start: 'top 85%' },
+            scrollTrigger: { trigger: row, start: 'top 88%', once: true },
           },
         );
         gsap.fromTo(
           text,
-          { opacity: 0, x: 30 },
+          { opacity: 0, x: 20 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.5,
+            duration: 0.45,
             ease: 'power2.out',
-            scrollTrigger: { trigger: row, start: 'top 85%' },
+            scrollTrigger: { trigger: row, start: 'top 88%', once: true },
           },
         );
       });
+
+      revealOnScroll(
+        sectionRef.current.querySelector('[data-primitives-heading]'),
+        sectionRef.current,
+        { start: 'top 82%', y: 20 },
+      );
+
+      return () => killSectionScrollTriggers(sectionRef.current);
     },
     { scope: sectionRef, dependencies: [reduced] },
   );
@@ -83,7 +92,7 @@ export function PrimitivesSection() {
   return (
     <section ref={sectionRef} className="border-t border-white/10 bg-black px-4 py-28 md:px-8">
       <div className="mx-auto max-w-4xl">
-        <h2 className="somnia-headline text-3xl md:text-4xl">
+        <h2 data-primitives-heading className="somnia-headline text-3xl md:text-4xl">
           Five Somnia primitives. One product.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-[var(--text-muted)]">

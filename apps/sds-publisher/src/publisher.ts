@@ -1,5 +1,4 @@
 import { createPublicClient, http, type Chain } from 'viem';
-import { watchContractEvent } from 'viem/actions';
 import { somniaTestnet } from '@oracle-arena/config';
 import { loadEnv } from './env.js';
 import { createSdsSdk } from './sdk.js';
@@ -19,28 +18,61 @@ import {
 } from './publish.js';
 import { AgentStatus, BountyStatus } from './schemas.js';
 import { recordPublisherError, recordPublisherEvent, startHealthServer } from './health.js';
+import { runStartupChecks } from './startup.js';
+import { watchSafe } from './watchSafe.js';
 
 const chain: Chain = { ...somniaTestnet, contracts: {} };
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection (continuing):', reason);
+  recordPublisherError(String(reason));
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception (continuing):', error);
+  recordPublisherError(String(error));
+});
 
 async function main() {
   const env = loadEnv();
   startHealthServer();
+  await runStartupChecks();
+
   const sdk = createSdsSdk(true);
   const schemaIds = await computeSchemaIds(sdk);
 
   console.log('Oracle Arena SDS publisher starting');
   console.log('RPC:', env.rpcUrl);
   console.log('Schema IDs:', schemaIds);
+  console.log('Listening for events on', contractAddresses);
+  console.log('Note: events missed while the worker is down are not backfilled (on-chain data remains via RPC)');
 
   const publicClient = createPublicClient({ chain, transport: http(env.rpcUrl) });
-  const bountyCache = new Map<string, { poster: `0x${string}`; bountyType: `0x${string}`; claim: string; deadline: bigint; payout: bigint; createdAt: bigint }>();
+  const bountyCache = new Map<
+    string,
+    {
+      poster: `0x${string}`;
+      bountyType: `0x${string}`;
+      claim: string;
+      deadline: bigint;
+      payout: bigint;
+      createdAt: bigint;
+    }
+  >();
   const resolverMeta = new Map<string, { operator: `0x${string}`; bond: bigint; registeredAt: bigint }>();
 
   const publishBounty = async (
     bountyId: bigint,
     status: number,
     blockTimestamp: bigint,
-    overrides?: Partial<{ poster: `0x${string}`; bountyType: `0x${string}`; claim: string; deadline: bigint; payout: bigint; createdAt: bigint }>,
+    overrides?: Partial<{
+      poster: `0x${string}`;
+      bountyType: `0x${string}`;
+      claim: string;
+      deadline: bigint;
+      payout: bigint;
+      createdAt: bigint;
+    }>,
   ) => {
     const key = bountyId.toString();
     const cached = bountyCache.get(key);
@@ -62,21 +94,30 @@ async function main() {
         status,
       });
       recordPublisherEvent();
+      console.log(`[event] BountyPosted/status bountyId=${bountyId} status=${status}`);
     } catch (error) {
       console.error('[error] publish bounty', bountyId, error);
       recordPublisherError(String(error));
     }
   };
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.bountyBoard,
     abi: bountyBoardAbi,
     eventName: 'BountyPosted',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          bountyId?: bigint;
+          poster?: `0x${string}`;
+          bountyType?: `0x${string}`;
+          claim?: string;
+          deadline?: bigint;
+          payout?: bigint;
+        };
         if (!args.bountyId) continue;
         const createdAt = BigInt(log.blockTimestamp ?? 0);
+        console.log(`[event] BountyPosted detected: bountyId=${args.bountyId}`);
         bountyCache.set(args.bountyId.toString(), {
           poster: args.poster!,
           bountyType: args.bountyType!,
@@ -95,29 +136,34 @@ async function main() {
         });
       }
     },
-    onError: (error) => console.error('[watch] BountyPosted', error),
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.bountyBoard,
     abi: bountyBoardAbi,
     eventName: 'BountyCancelled',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const bountyId = log.args.bountyId;
+        const bountyId = (log.args as { bountyId?: bigint }).bountyId;
         if (!bountyId) continue;
         await publishBounty(bountyId, BountyStatus.Cancelled, BigInt(log.blockTimestamp ?? 0));
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.bountyBoard,
     abi: bountyBoardAbi,
     eventName: 'BountySettled',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          bountyId?: bigint;
+          winningVerdictHash?: `0x${string}`;
+          winners?: readonly `0x${string}`[];
+          payoutShares?: readonly bigint[];
+          feeAmount?: bigint;
+        };
         if (!args.bountyId) continue;
         const ts = BigInt(log.blockTimestamp ?? 0);
         await publishBounty(args.bountyId, BountyStatus.Resolved, ts);
@@ -130,33 +176,42 @@ async function main() {
             shares: [...(args.payoutShares ?? [])],
             feeAmount: args.feeAmount ?? 0n,
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish settlement from BountySettled', error);
+          recordPublisherError(String(error));
         }
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.bountyBoard,
     abi: bountyBoardAbi,
     eventName: 'BountyUnresolved',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const bountyId = log.args.bountyId;
+        const bountyId = (log.args as { bountyId?: bigint }).bountyId;
         if (!bountyId) continue;
         await publishBounty(bountyId, BountyStatus.Unresolved, BigInt(log.blockTimestamp ?? 0));
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.bountyBoard,
     abi: bountyBoardAbi,
     eventName: 'SubmissionRecorded',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          bountyId?: bigint;
+          resolver?: `0x${string}`;
+          verdictHash?: `0x${string}`;
+          confidence?: number;
+          evidenceUri?: string;
+          submittedAt?: bigint;
+        };
         if (!args.bountyId || !args.resolver) continue;
         try {
           await publishSubmissionRecord(sdk, schemaIds.submissions, {
@@ -167,21 +222,29 @@ async function main() {
             confidence: Number(args.confidence ?? 0),
             evidenceUri: args.evidenceUri ?? '',
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish submission', error);
+          recordPublisherError(String(error));
         }
         await publishBounty(args.bountyId, BountyStatus.Submitted, BigInt(log.blockTimestamp ?? 0));
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.consensusEngine,
     abi: consensusEngineAbi,
     eventName: 'VerdictReceived',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          bountyId?: bigint;
+          resolver?: `0x${string}`;
+          verdictHash?: `0x${string}`;
+          confidence?: number;
+          submittedAt?: bigint;
+        };
         if (!args.bountyId || !args.resolver) continue;
         try {
           await publishSubmissionRecord(sdk, schemaIds.submissions, {
@@ -192,20 +255,27 @@ async function main() {
             confidence: Number(args.confidence ?? 0),
             evidenceUri: '',
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish verdict', error);
+          recordPublisherError(String(error));
         }
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.consensusEngine,
     abi: consensusEngineAbi,
     eventName: 'ConsensusReached',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          bountyId?: bigint;
+          winningHash?: `0x${string}`;
+          winners?: readonly `0x${string}`[];
+          shares?: readonly bigint[];
+        };
         if (!args.bountyId) continue;
         const ts = BigInt(log.blockTimestamp ?? 0);
         try {
@@ -217,20 +287,27 @@ async function main() {
             shares: [...(args.shares ?? [])],
             feeAmount: 0n,
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish settlement from ConsensusReached', error);
+          recordPublisherError(String(error));
         }
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.resolverRegistry,
     abi: resolverRegistryAbi,
     eventName: 'AgentRegistered',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          agent?: `0x${string}`;
+          operator?: `0x${string}`;
+          bond?: bigint;
+          registeredAt?: bigint;
+        };
         if (!args.agent || !args.operator) continue;
         resolverMeta.set(args.agent.toLowerCase(), {
           operator: args.operator,
@@ -248,20 +325,27 @@ async function main() {
             totalEarnings: 0n,
             status: AgentStatus.Active,
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish resolver registration', error);
+          recordPublisherError(String(error));
         }
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.resolverRegistry,
     abi: resolverRegistryAbi,
     eventName: 'ReputationUpdated',
     onLogs: async (logs) => {
       for (const log of logs) {
-        const args = log.args;
+        const args = log.args as {
+          agent?: `0x${string}`;
+          resolutionsAttempted?: bigint;
+          resolutionsAgreed?: bigint;
+          earnings?: bigint;
+        };
         if (!args.agent) continue;
         const meta = resolverMeta.get(args.agent.toLowerCase());
         try {
@@ -275,14 +359,16 @@ async function main() {
             totalEarnings: args.earnings ?? 0n,
             status: AgentStatus.Active,
           });
+          recordPublisherEvent();
         } catch (error) {
           console.error('[error] publish reputation update', error);
+          recordPublisherError(String(error));
         }
       }
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.settlement,
     abi: settlementAbi,
     eventName: 'PayoutQueued',
@@ -293,7 +379,7 @@ async function main() {
     },
   });
 
-  watchContractEvent(publicClient, {
+  watchSafe(publicClient, {
     address: env.settlement,
     abi: settlementAbi,
     eventName: 'PayoutForwarded',
@@ -304,11 +390,11 @@ async function main() {
     },
   });
 
-  console.log('Listening for events on', contractAddresses);
+  console.log('Listening for events — worker will stay alive until stopped');
   await new Promise(() => undefined);
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error('Fatal startup error:', error);
   process.exit(1);
 });

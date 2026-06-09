@@ -1,4 +1,5 @@
 import type { SDK } from '@somnia-chain/streams';
+import type { Hex } from 'viem';
 import {
   APPEALS_SCHEMA,
   BOUNTIES_SCHEMA,
@@ -7,13 +8,17 @@ import {
   SUBMISSIONS_SCHEMA,
 } from './schemas.js';
 
+async function schemaId(sdk: SDK, schema: string): Promise<Hex> {
+  return (await sdk.streams.computeSchemaId(schema)) as Hex;
+}
+
 export async function computeSchemaIds(sdk: SDK) {
   const [bounties, submissions, resolvers, settlements, appeals] = await Promise.all([
-    sdk.streams.computeSchemaId(BOUNTIES_SCHEMA),
-    sdk.streams.computeSchemaId(SUBMISSIONS_SCHEMA),
-    sdk.streams.computeSchemaId(RESOLVERS_SCHEMA),
-    sdk.streams.computeSchemaId(SETTLEMENTS_SCHEMA),
-    sdk.streams.computeSchemaId(APPEALS_SCHEMA),
+    schemaId(sdk, BOUNTIES_SCHEMA),
+    schemaId(sdk, SUBMISSIONS_SCHEMA),
+    schemaId(sdk, RESOLVERS_SCHEMA),
+    schemaId(sdk, SETTLEMENTS_SCHEMA),
+    schemaId(sdk, APPEALS_SCHEMA),
   ]);
 
   return { bounties, submissions, resolvers, settlements, appeals };

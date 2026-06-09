@@ -14,8 +14,13 @@ pnpm sds-publish:setup-schemas
 ## Run
 
 ```bash
-pnpm sds-publish:run
+pnpm start
+# or: pnpm sds-publish:run
 ```
+
+## Deploy to Render (24/7)
+
+See [DEPLOY.md](./DEPLOY.md) for Background Worker setup via `render.yaml` at repo root.
 
 ## Read back
 

@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useReducedMotion } from '../../lib/hooks/useReducedMotion';
+import { killSectionScrollTriggers, revealOnScroll } from '../../lib/gsap/landingScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,30 +35,15 @@ export function ProblemSection() {
       const heading = sectionRef.current.querySelector('[data-problem-heading]');
       const cardEls = sectionRef.current.querySelectorAll('[data-problem-card]');
 
-      gsap.fromTo(
-        heading,
-        { opacity: 0, y: 32 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
-        },
-      );
+      revealOnScroll(heading, sectionRef.current, { start: 'top 78%', y: 28, duration: 0.6 });
+      revealOnScroll(cardEls, sectionRef.current, {
+        start: 'top 68%',
+        y: 32,
+        stagger: 0.1,
+        duration: 0.5,
+      });
 
-      gsap.fromTo(
-        cardEls,
-        { opacity: 0, y: 40, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.55,
-          stagger: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
-        },
-      );
+      return () => killSectionScrollTriggers(sectionRef.current);
     },
     { scope: sectionRef, dependencies: [reduced] },
   );

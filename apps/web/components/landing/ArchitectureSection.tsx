@@ -6,13 +6,25 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 import { useReducedMotion, useIsMobile } from '../../lib/hooks/useReducedMotion';
+import { killSectionScrollTriggers, scrollPastSection } from '../../lib/gsap/landingScroll';
 import { ArchitectureDiagram } from './architecture/ArchitectureDiagram';
 import type { ArchitectureDiagramRefs } from './architecture/ArchitectureDiagram';
+import { ScrollStageBar, STAGES } from './architecture/ScrollStageBar';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const CONSENSUS_TX =
   'https://shannon-explorer.somnia.network/tx/0xaafb4879d77e3f242364d6f62846ef0063a7d18bc45c7586b7a0249e2e791a66';
+
+/** Map timeline progress (0–1) to stage index */
+function progressToStage(progress: number): number {
+  const thresholds = [0, 0.12, 0.28, 0.48, 0.68, 0.82];
+  for (let i = thresholds.length - 1; i >= 0; i--) {
+    const threshold = thresholds[i] ?? 0;
+    if (progress >= threshold) return Math.min(i, STAGES.length - 1);
+  }
+  return 0;
+}
 
 function setupPathDraw(
   path: SVGPathElement | null,
@@ -86,7 +98,11 @@ export function ArchitectureSection() {
 
   const reduced = useReducedMotion();
   const mobile = useIsMobile();
+  const tablet = useIsMobile(1024);
+  const usePin = !mobile && !tablet;
   const [bountySuccess, setBountySuccess] = useState(false);
+  const [stageIndex, setStageIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useGSAP(
     () => {
@@ -128,32 +144,45 @@ export function ArchitectureSection() {
       gsap.set(flash.current, { opacity: 0, scale: 0.5 });
       if (proofRef.current) gsap.set(proofRef.current, { opacity: 0, y: 12 });
 
-      if (reduced) {
+      const showFinalState = () => {
         gsap.set(bounty.current, { scale: 1, opacity: 1 });
         gsap.set(hidden, { opacity: 1, scale: 1 });
         paths.forEach((p) => p && gsap.set(p, { strokeDashoffset: 0, opacity: 1 }));
         setBountySuccess(true);
+        setStageIndex(STAGES.length - 1);
+        setScrollProgress(1);
         if (proofRef.current) gsap.set(proofRef.current, { opacity: 1, y: 0 });
+      };
+
+      if (reduced) {
+        showFinalState();
         return;
       }
+
+      const updateProgress = (progress: number) => {
+        setScrollProgress(progress);
+        setStageIndex(progressToStage(progress));
+        setBountySuccess(progress > 0.72);
+      };
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: mobile ? 'bottom center' : '+=600%',
-          pin: mobile ? false : pinRef.current,
-          pinSpacing: !mobile,
-          scrub: mobile ? false : 1,
+          end: usePin ? '+=380%' : mobile ? 'bottom center' : '+=120%',
+          pin: usePin ? pinRef.current : false,
+          pinSpacing: usePin,
+          scrub: usePin ? 0.45 : false,
           anticipatePin: 1,
-          ...(mobile ? { toggleActions: 'play none none none', once: true } : {}),
+          invalidateOnRefresh: true,
+          ...(usePin
+            ? {}
+            : { toggleActions: 'play none none none', once: true }),
         },
-        ...(mobile ? { duration: 3.5 } : {}),
-        onUpdate: () => {
-          if (!mobile) setBountySuccess(tl.progress() > 0.72);
-        },
+        ...(!usePin ? { duration: mobile ? 2.8 : 3.2, ease: 'none' } : {}),
+        onUpdate: () => updateProgress(tl.progress()),
         onComplete: () => {
-          if (mobile) setBountySuccess(true);
+          if (!usePin) showFinalState();
         },
       });
 
@@ -174,14 +203,14 @@ export function ArchitectureSection() {
         0.38,
       );
 
-      tl.to([evidenceA1.current, evidenceA2.current], { scale: 1.1, duration: 0.05, yoyo: true, repeat: 1 }, 0.5);
-      tl.to([evidenceB1.current, evidenceB2.current], { scale: 1.1, duration: 0.05, yoyo: true, repeat: 1 }, 0.52);
+      tl.to([evidenceA1.current, evidenceA2.current], { scale: 1.08, duration: 0.04, yoyo: true, repeat: 1 }, 0.5);
+      tl.to([evidenceB1.current, evidenceB2.current], { scale: 1.08, duration: 0.04, yoyo: true, repeat: 1 }, 0.52);
       tl.to([verdictA.current, verdictB.current], { opacity: 1, scale: 1, duration: 0.1, stagger: 0.04 }, 0.55);
 
       setupPathDraw(pathVerdictMergeL.current, tl, 0.65, 0.08);
       setupPathDraw(pathVerdictMergeR.current, tl, 0.67, 0.08);
       tl.to([verdictA.current, verdictB.current], { opacity: 0, scale: 0.6, duration: 0.1 }, 0.72);
-      tl.to(flash.current, { opacity: 0.85, scale: 1.3, duration: 0.04 }, 0.76);
+      tl.to(flash.current, { opacity: 0.7, scale: 1.2, duration: 0.04 }, 0.76);
       tl.to(flash.current, { opacity: 0, duration: 0.06 }, 0.8);
       tl.to(consensus.current, { opacity: 1, scale: 1, duration: 0.12, ease: 'back.out(2)' }, 0.78);
 
@@ -200,32 +229,34 @@ export function ArchitectureSection() {
             opacity: 1,
             y: 0,
             duration: 0.5,
-            scrollTrigger: { trigger: sectionRef.current, start: 'top 85%' },
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', once: true },
           },
         );
       }
 
-      return () => {
-        ScrollTrigger.getAll().forEach((st) => {
-          if (st.vars.trigger === sectionRef.current) st.kill();
-        });
-      };
+      return () => killSectionScrollTriggers(sectionRef.current);
     },
-    { scope: sectionRef, dependencies: [reduced, mobile] },
+    { scope: sectionRef, dependencies: [reduced, mobile, tablet, usePin] },
   );
 
   return (
     <section ref={sectionRef} className="relative landing-bg">
       <div
         ref={pinRef}
-        className="flex min-h-screen flex-col items-center justify-center px-4 py-16 md:px-8"
+        className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16 md:px-8"
       >
         <h2
           ref={headingRef}
-          className="mb-8 text-center font-display text-3xl font-bold text-[var(--text)] md:text-4xl"
+          className="mb-6 text-center font-display text-3xl font-bold text-[var(--text)] md:mb-8 md:text-4xl"
         >
           Here&apos;s how Oracle Arena works
         </h2>
+
+        {!reduced && usePin ? (
+          <p className="mb-6 text-center text-[10px] uppercase tracking-[0.24em] text-[var(--text-dim)]">
+            Scroll to animate · real testnet flow
+          </p>
+        ) : null}
 
         <ArchitectureDiagram refs={refs} bountySuccess={bountySuccess} />
 
@@ -243,6 +274,14 @@ export function ArchitectureSection() {
             Tx 0xaafb4879…
           </Link>
         </p>
+
+        {!reduced ? (
+          <ScrollStageBar
+            activeIndex={stageIndex}
+            progress={scrollProgress}
+            onSkip={() => scrollPastSection(sectionRef.current)}
+          />
+        ) : null}
       </div>
     </section>
   );
