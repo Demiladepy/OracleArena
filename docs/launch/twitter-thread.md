@@ -20,7 +20,7 @@
 9) What’s next (Phase 2): appeal layer + slashing, open resolver registration, multi-chain bounty funding, mainnet LI.FI settlement, production SDS schema versioning + monitoring.
 
 10) Repo + live links:
-   GitHub: https://github.com/nibiru/oraclearena
+   GitHub: https://github.com/Demiladepy/OracleArena
    Demo bounty #4 txs: https://shannon-explorer.somnia.network/tx/0xaafb4879d77e3f242364d6f62846ef0063a7d18bc45c7586b7a0249e2e791a66
 
 11) Thanks to the Somnia team for testnet support + platform guidance, and Encode Club for the Agentathon.

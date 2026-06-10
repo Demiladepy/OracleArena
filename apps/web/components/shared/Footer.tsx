@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { GITHUB_REPO_URL } from '../../lib/site';
 import { SomniaPartnerLockup } from './SomniaPartnerLockup';
 
 export function Footer() {
@@ -19,11 +20,11 @@ export function Footer() {
           Open infrastructure for verifiable fact resolution on Somnia. Built for the Agentathon.
         </p>
         <div className="flex flex-wrap gap-4 text-sm">
-          <Link href="https://github.com/nibiru/oraclearena" className="text-surface-muted hover:text-white transition-colors">
+          <Link href={GITHUB_REPO_URL} className="text-surface-muted hover:text-white transition-colors">
             GitHub
           </Link>
           <Link
-            href="https://github.com/nibiru/oraclearena#readme"
+            href={`${GITHUB_REPO_URL}#readme`}
             className="text-surface-muted hover:text-white transition-colors"
           >
             README

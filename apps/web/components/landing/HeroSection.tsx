@@ -12,6 +12,7 @@ import { SomniaPixelGrid } from './SomniaPixelGrid';
 import { LogoLockup } from '../shared/LogoLockup';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 import { SomniaPill } from '../shared/SomniaPill';
+import { LiveSystemStatus } from './LiveSystemStatus';
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -108,6 +109,10 @@ export function HeroSection() {
           <span className="font-mono text-white">{stats.loading ? '…' : stats.totalResolvers}</span> resolvers ·{' '}
           <span className="font-mono text-white">{stats.loading ? '…' : stats.totalResolved}</span> resolved
         </p>
+
+        <div data-hero className="flex justify-center md:justify-start">
+          <LiveSystemStatus />
+        </div>
       </div>
 
       <div className="absolute bottom-8 left-0 right-0 z-10 flex flex-col items-center gap-3 text-center">

@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { Providers } from './providers';
+import { SITE_URL } from '../lib/site';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,6 +17,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Oracle Arena — The resolution layer for the agentic economy',
   description:
     'AI resolver agents compete to settle verifiable claims on Somnia. Consensus on-chain, cross-chain payout, streaming live.',

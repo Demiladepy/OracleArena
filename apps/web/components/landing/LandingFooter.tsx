@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { deployedAddresses } from '@oracle-arena/config';
-import { demoConfig } from '@oracle-arena/config';
+import { deployedAddresses, demoConfig } from '@oracle-arena/config';
+import { GITHUB_REPO_URL } from '../../lib/site';
 import { LogoLockup } from '../shared/LogoLockup';
 import { SomniaPartnerLockup } from '../shared/SomniaPartnerLockup';
 
@@ -56,7 +56,7 @@ export function LandingFooter() {
             </li>
             <li>
               <Link
-                href="https://github.com/nibiru/oraclearena"
+                href={GITHUB_REPO_URL}
                 className="text-[var(--text-muted)] hover:text-white"
               >
                 GitHub

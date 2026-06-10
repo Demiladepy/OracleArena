@@ -5,6 +5,7 @@ Open infrastructure for verifiable fact resolution on Somnia.
 Oracle Arena is a bounty marketplace where independent resolver agents investigate URL-backed claims, submit normalized verdicts on-chain, and reach consensus before escrow settles. Cross-chain resolver payouts follow a production-shaped `Settlement` → `LiFiAdapter` path; on Shannon testnet the router is a mock. The stack is Solidity (Foundry), a Next.js frontend, and an optional Somnia Data Streams (SDS) publisher for structured race output.
 
 **Repository:** [github.com/Demiladepy/OracleArena](https://github.com/Demiladepy/OracleArena)  
+**Live app:** [oraclearena.vercel.app](https://oraclearena.vercel.app)  
 **Network:** Somnia testnet (chain ID **50312**)  
 **Verified findings:** [`docs/findings/`](docs/findings/)
 
@@ -14,22 +15,35 @@ Oracle Arena is a bounty marketplace where independent resolver agents investiga
 ## Table of contents
 
 1. [Hero](#hero)
-2. [Live demo](#live-demo)
-3. [What it does](#what-it-does)
-4. [Five Somnia primitives, one product](#five-somnia-primitives-one-product)
-5. [Architecture](#architecture)
-6. [Tech stack](#tech-stack)
-7. [Local development](#local-development)
-8. [Project structure](#project-structure)
-9. [Roadmap](#roadmap)
-10. [Acknowledgments](#acknowledgments)
-11. [License](#license)
+2. [For judges (60 seconds)](#for-judges-60-seconds)
+3. [Live demo](#live-demo)
+4. [What it does](#what-it-does)
+5. [Five Somnia primitives, one product](#five-somnia-primitives-one-product)
+6. [Architecture](#architecture)
+7. [Tech stack](#tech-stack)
+8. [Local development](#local-development)
+9. [Project structure](#project-structure)
+10. [Roadmap](#roadmap)
+11. [Acknowledgments](#acknowledgments)
+12. [License](#license)
 
 ## Hero
 
 A protocol posts a bounty with a verifiable claim and escrowed STT. Two or more `ResolverAgent` contracts call Somnia's `inferToolsChat` platform (`0x037Bb9C718F3f7fe5eCBDB0b600D607b52706776`), gather evidence from URLs, and submit `bytes32` verdict hashes plus confidence to `ConsensusEngine`. On agreement, `BountyBoard` settles and splits payout (60% / 40% for the first two submitters). A resolver configured for cross-chain payout queues funds at `Settlement`; `forwardPayout` routes through `LiFiAdapter`.
 
 What is verified today: the full agree path on **bounty #4**, including mock cross-chain bridge emission. What is not automatic today: agents do not self-start on `BountyPosted` (operators call `evaluateBounty`), cross-chain `forwardPayout` is a manual step in the demo, and SDS records require the publisher worker to be running.
+
+## For judges (60 seconds)
+
+| Start here | What you see |
+|------------|--------------|
+| [Live app](https://oraclearena.vercel.app) | Landing **system status** (contracts, SDS, CI tests) |
+| [`/bounty/4`](https://oraclearena.vercel.app/bounty/4) | Canonical **resolved** demo — full tx chain in table below |
+| [`/bounty/1`](https://oraclearena.vercel.app/bounty/1) | **Disagreement** → Unresolved (encoding mismatch, documented) |
+| [`/marketplace`](https://oraclearena.vercel.app/marketplace) | Mix of **Open**, **Resolved**, and **Unresolved** bounties |
+| [`/register`](https://oraclearena.vercel.app/register) | Open resolver registration (deploy agent → bond STT) |
+
+**Before a live session:** post one fresh **Open** bounty on [`/post`](https://oraclearena.vercel.app/post) (~30 min before judging) so the marketplace shows an in-progress claim alongside #4 and #1. Resolution still requires operators to call `evaluateBounty` — do not promise auto-race on new posts.
 
 ## Live demo
 
@@ -124,7 +138,7 @@ Foundry: **144 tests** across 11 suites (`contracts/test/`). CI runs `forge fmt 
 | `/post` | Wallet-connected `postBounty` |
 | `/register` | Wallet-connected `registerAgent` |
 
-Frontend deploy: Vercel (`apps/web/vercel.json`). No production URL is committed in this repo.
+Frontend deploy: Vercel — [oraclearena.vercel.app](https://oraclearena.vercel.app) (`apps/web/vercel.json`).
 
 ### SDS publisher (24/7 worker)
 
