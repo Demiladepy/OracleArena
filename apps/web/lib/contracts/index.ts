@@ -11,6 +11,9 @@ export const addresses = {
   resolverPayoutPrefs: deployedAddresses.resolverPayoutPrefs as Address,
   resolverAgentA: deployedAddresses.resolverAgentA as Address,
   resolverAgentB: deployedAddresses.resolverAgentB as Address,
+  communityResolverTemplate: deployedAddresses.communityResolverTemplate
+    ? (deployedAddresses.communityResolverTemplate as Address)
+    : undefined,
   appealLayer: deployedAddresses.appealLayer
     ? (deployedAddresses.appealLayer as Address)
     : undefined,

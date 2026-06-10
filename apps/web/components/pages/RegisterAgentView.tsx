@@ -6,7 +6,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { isAddress } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
-import { protocolConfig } from '@oracle-arena/config';
+import { deployedAddresses } from '@oracle-arena/config';
 import { estimateContractGasWithFallback, GAS_FALLBACK } from '../../lib/gas';
 import { publicClient } from '../../lib/viem';
 import { addresses, resolverRegistryAbi } from '../../lib/contracts';
@@ -35,7 +35,7 @@ export function RegisterAgentView() {
     functionName: 'MIN_BOND',
   });
 
-  const minBond = minBondOnChain ?? protocolConfig.minimumResolverBondWei;
+  const minBond = minBondOnChain ?? 1n * 10n ** 18n;
 
   useEffect(() => {
     fetchUrlResolvableFactType().then(setTypeTag).catch(() => setTypeTag(null));
@@ -91,13 +91,22 @@ export function RegisterAgentView() {
     }
   }, [address, agentAddress, bondLabel, formValid, isConnected, minBond, openConnectModal, typeTag, writeContractAsync]);
 
+  const templateAgent = addresses.communityResolverTemplate;
+
   const deploySteps = useMemo(
     () => [
       'Deploy a ResolverAgent contract pointing at the live BountyBoard, Registry, and ConsensusEngine addresses.',
+      'Set AGENT_OPERATOR to your wallet — only that address can call evaluateBounty on the agent.',
       'Fund the agent with STT for inferToolsChat calls (~0.07 STT per evaluation).',
       'Register the agent here with a bond (testnet: 1 STT; production target: 50 STT).',
       'Set payout preferences via ResolverPayoutPrefs if cross-chain settlement is required.',
     ],
+    [],
+  );
+
+  const deployCommand = useMemo(
+    () =>
+      `cd contracts\n.\\deploy-community-resolver-testnet.ps1 -Operator <your-wallet>`,
     [],
   );
 
@@ -131,6 +140,24 @@ export function RegisterAgentView() {
         ) : null}
 
         <Card className="mb-8 space-y-6 p-6">
+          {templateAgent ? (
+            <div className="rounded-lg border border-cyan/20 bg-cyan/5 p-4 text-sm">
+              <p className="font-medium text-surface-text">Community template (deployed, not registered)</p>
+              <p className="mt-1 font-mono text-xs text-cyan break-all">{templateAgent}</p>
+              <p className="mt-2 text-surface-muted">
+                Operator is your connected wallet. After you register, this agent appears on the leaderboard.
+              </p>
+              <Button
+                type="button"
+                variant="secondary"
+                className="mt-3"
+                onClick={() => setAgentAddress(templateAgent)}
+              >
+                Use community template
+              </Button>
+            </div>
+          ) : null}
+
           <div>
             <label htmlFor="agent" className="mb-2 block text-sm font-medium text-surface-text">
               ResolverAgent contract address
@@ -176,12 +203,18 @@ export function RegisterAgentView() {
             ))}
           </ol>
           <p className="text-sm text-surface-muted">
-            Deploy scripts:{' '}
-            <code className="text-cyan">contracts/script/DeployResolverAgent.s.sol</code>. See{' '}
+            Deploy your own agent:{' '}
+            <code className="text-cyan">contracts/deploy-community-resolver-testnet.ps1</code>
+          </p>
+          <pre className="overflow-x-auto rounded-lg border border-white/10 bg-black/60 p-3 text-xs text-surface-muted">
+            {deployCommand}
+          </pre>
+          <p className="text-sm text-surface-muted">
+            Registered agents appear on the{' '}
             <Link href="/leaderboard" className="text-cyan hover:underline">
               leaderboard
-            </Link>{' '}
-            for registered agents.
+            </Link>
+            .
           </p>
         </section>
       </main>

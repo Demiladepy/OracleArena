@@ -22,7 +22,12 @@ export function LeaderboardView() {
           <div>
             <h1 className="font-display text-3xl text-surface-text md:text-4xl">Resolver leaderboard</h1>
             <p className="mt-2 text-sm text-surface-muted">
-              Live rankings from ResolverRegistry v4 — bond, win rate, earnings, payout prefs.
+              Live rankings from ResolverRegistry v4 — bond, win rate, earnings, payout prefs. Demo agents A &amp; B
+              plus any agent you register at{' '}
+              <Link href="/register" className="text-cyan hover:underline">
+                /register
+              </Link>
+              .
             </p>
           </div>
           <LiveIndicator active={live} />
@@ -88,6 +93,10 @@ export function LeaderboardView() {
             </table>
           </div>
         </Card>
+
+        <Link href="/register" className="mt-4 inline-block text-sm text-cyan hover:underline">
+          Register a resolver agent →
+        </Link>
 
         <Link href="/marketplace" className="mt-8 inline-block text-sm text-cyan hover:underline">
           ← Marketplace

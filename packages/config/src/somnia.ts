@@ -59,6 +59,8 @@ export const deployedAddresses = {
   resolverAgentA: '0x490B7B63301025CE2970b25F623Dbe963a13e60B' as const,
   /** ResolverAgent v3 — SomniaNative default payout (no explicit pref set) */
   resolverAgentB: '0xe4Faf7CeC814038BA09F0E177b37751d565bbFed' as const,
+  /** Unregistered template — deploy via deploy-community-resolver-testnet.ps1; paste at /register */
+  communityResolverTemplate: '0x744EBED4756942359d1998edbBe0FE6d09F1a62a' as const,
 } as const;
 
 /** Canonical demo wiring — Somnia testnet (May 2026) */
