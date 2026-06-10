@@ -7,6 +7,7 @@ import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { isAddress } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { protocolConfig } from '@oracle-arena/config';
+import { estimateContractGasWithFallback, GAS_FALLBACK } from '../../lib/gas';
 import { publicClient } from '../../lib/viem';
 import { addresses, resolverRegistryAbi } from '../../lib/contracts';
 import { fetchUrlResolvableFactType } from '../../lib/contracts/bountyBoard';
@@ -19,7 +20,7 @@ import { Header } from '../shared/Header';
 type Banner = { kind: 'info' | 'error' | 'success'; message: string };
 
 export function RegisterAgentView() {
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { writeContractAsync, isPending } = useWriteContract();
 
@@ -56,12 +57,25 @@ export function RegisterAgentView() {
     setBanner(null);
 
     try {
+      const gas = await estimateContractGasWithFallback(
+        publicClient,
+        {
+          address: addresses.resolverRegistry,
+          abi: resolverRegistryAbi,
+          functionName: 'registerAgent',
+          args: [agentAddress as `0x${string}`, [typeTag]],
+          account: address!,
+          value: minBond,
+        },
+        GAS_FALLBACK.registerAgent,
+      );
       const hash = await writeContractAsync({
         address: addresses.resolverRegistry,
         abi: resolverRegistryAbi,
         functionName: 'registerAgent',
         args: [agentAddress as `0x${string}`, [typeTag]],
         value: minBond,
+        gas,
       });
 
       await waitForTransactionReceipt(publicClient, { hash });
@@ -75,7 +89,7 @@ export function RegisterAgentView() {
     } finally {
       setSubmitting(false);
     }
-  }, [agentAddress, bondLabel, formValid, isConnected, minBond, openConnectModal, typeTag, writeContractAsync]);
+  }, [address, agentAddress, bondLabel, formValid, isConnected, minBond, openConnectModal, typeTag, writeContractAsync]);
 
   const deploySteps = useMemo(
     () => [

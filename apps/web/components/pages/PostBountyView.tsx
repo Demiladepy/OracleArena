@@ -7,6 +7,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWriteContract } from 'wagmi';
 import { decodeEventLog, formatEther, parseEther } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
+import { estimateContractGasWithFallback, GAS_FALLBACK, withGasBuffer } from '../../lib/gas';
 import { publicClient } from '../../lib/viem';
 import { addresses, bountyBoardAbi } from '../../lib/contracts';
 import { clearPostedPayoutCache, fetchUrlResolvableFactType } from '../../lib/contracts/bountyBoard';
@@ -23,10 +24,25 @@ const MIN_CLAIM = 10;
 const MIN_PAYOUT = 0.1;
 const MAX_DEADLINE_DAYS = 7;
 
+const EXAMPLE_CLAIM = 'Is the chemical formula for water H2O?';
+const EXAMPLE_EVIDENCE = 'https://en.wikipedia.org/wiki/Water';
+
 type Banner = { kind: 'info' | 'error'; message: string };
 
 function defaultDeadline(): string {
   const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 16);
+}
+
+function maxDeadlineLocal(): string {
+  const d = new Date(Date.now() + MAX_DEADLINE_DAYS * 86400 * 1000);
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 16);
+}
+
+function minDeadlineLocal(): string {
+  const d = new Date(Date.now() + 60 * 60 * 1000);
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(0, 16);
 }
@@ -52,6 +68,7 @@ export function PostBountyView() {
   const [payoutStt, setPayoutStt] = useState('0.2');
   const [typeTag, setTypeTag] = useState<`0x${string}` | null>(null);
   const [gasEstimate, setGasEstimate] = useState<bigint | null>(null);
+  const [gasHint, setGasHint] = useState<string | null>(null);
   const [banner, setBanner] = useState<Banner | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -67,7 +84,8 @@ export function PostBountyView() {
     }
   }, [payoutStt]);
 
-  const evidenceValid = evidence.filter((e) => e.trim()).every(isHttpsUrl);
+  const trimmedEvidence = evidence.map((e) => e.trim()).filter(Boolean);
+  const evidenceValid = trimmedEvidence.length >= 1 && trimmedEvidence.every(isHttpsUrl);
   const claimValid = claim.trim().length >= MIN_CLAIM && claim.length <= MAX_CLAIM;
   const payoutValid = Number(payoutStt) >= MIN_PAYOUT;
   const deadlineDate = new Date(deadline);
@@ -78,13 +96,44 @@ export function PostBountyView() {
 
   const formValid = claimValid && evidenceValid && payoutValid && deadlineValid && typeTag !== null;
 
+  const validationHints: string[] = [];
+  if (!isConnected) validationHints.push('Connect wallet on Somnia testnet (chain 50312)');
+  if (!claimValid) validationHints.push(`Claim needs at least ${MIN_CLAIM} characters`);
+  if (trimmedEvidence.length === 0) validationHints.push('Add at least one https:// evidence URL');
+  else if (!evidenceValid) validationHints.push('Evidence URLs must start with https://');
+  if (!payoutValid) validationHints.push(`Payout must be at least ${MIN_PAYOUT} STT`);
+  if (!deadlineValid) {
+    validationHints.push(`Deadline must be within the next ${MAX_DEADLINE_DAYS} days (not year 2100+)`);
+  }
+  if (!typeTag) validationHints.push('Loading bounty type from chain…');
+
+  function fillExample() {
+    setClaim(EXAMPLE_CLAIM);
+    setEvidence([EXAMPLE_EVIDENCE]);
+    setPayoutStt('0.1');
+    setDeadline(defaultDeadline());
+    setBanner(null);
+  }
+
   const estimateGas = useCallback(async () => {
-    if (!address || !typeTag || !formValid) {
+    if (!address) {
       setGasEstimate(null);
+      setGasHint('Connect wallet on Somnia testnet (50312)');
+      return;
+    }
+    if (!typeTag || !formValid) {
+      setGasEstimate(null);
+      if (!claimValid) setGasHint(`Claim needs at least ${MIN_CLAIM} characters`);
+      else if (trimmedEvidence.length === 0) setGasHint('Add at least one https:// evidence URL');
+      else if (!evidenceValid) setGasHint('Evidence URLs must start with https://');
+      else if (!payoutValid) setGasHint(`Payout must be at least ${MIN_PAYOUT} STT`);
+      else if (!deadlineValid) setGasHint(`Deadline must be within ${MAX_DEADLINE_DAYS} days`);
+      else if (!typeTag) setGasHint('Loading bounty type from chain…');
+      else setGasHint('Complete the form to estimate gas');
       return;
     }
     try {
-      const sources = evidence.map((e) => e.trim()).filter(Boolean);
+      const sources = trimmedEvidence;
       const gas = await publicClient.estimateContractGas({
         address: addresses.bountyBoard,
         abi: bountyBoardAbi,
@@ -93,11 +142,20 @@ export function PostBountyView() {
         account: address,
         value: payoutWei,
       });
-      setGasEstimate(gas);
-    } catch {
+      setGasEstimate(withGasBuffer(gas));
+      setGasHint(null);
+    } catch (err) {
       setGasEstimate(null);
+      const msg = err instanceof Error ? err.message : String(err);
+      if (/insufficient funds/i.test(msg)) {
+        setGasHint(`Not enough STT — need ${formatSTT(payoutWei)} payout plus gas in wallet`);
+      } else if (/chain/i.test(msg) || /50312/i.test(msg)) {
+        setGasHint('Switch wallet to Somnia testnet (chain ID 50312)');
+      } else {
+        setGasHint(msg.slice(0, 120));
+      }
     }
-  }, [address, typeTag, formValid, claim, evidence, deadlineDate, payoutWei]);
+  }, [address, typeTag, formValid, claim, claimValid, evidenceValid, trimmedEvidence, deadlineValid, deadlineDate, payoutValid, payoutWei]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -119,13 +177,30 @@ export function PostBountyView() {
 
     setSubmitting(true);
     try {
-      const sources = evidence.map((s) => s.trim()).filter(Boolean);
+      const sources = trimmedEvidence;
+      const deadlineTs = BigInt(Math.floor(deadlineDate.getTime() / 1000));
+      const postArgs = [claim.trim(), sources, typeTag, deadlineTs] as const;
+      const gas =
+        gasEstimate ??
+        (await estimateContractGasWithFallback(
+          publicClient,
+          {
+            address: addresses.bountyBoard,
+            abi: bountyBoardAbi,
+            functionName: 'postBounty',
+            args: postArgs,
+            account: address!,
+            value: payoutWei,
+          },
+          GAS_FALLBACK.postBounty,
+        ));
       const hash = await writeContractAsync({
         address: addresses.bountyBoard,
         abi: bountyBoardAbi,
         functionName: 'postBounty',
-        args: [claim.trim(), sources, typeTag, BigInt(Math.floor(deadlineDate.getTime() / 1000))],
+        args: postArgs,
         value: payoutWei,
+        gas,
       });
 
       const receipt = await waitForTransactionReceipt(publicClient, { hash });
@@ -198,6 +273,15 @@ export function PostBountyView() {
           </div>
         ) : null}
 
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Button type="button" variant="secondary" size="sm" onClick={fillExample}>
+            Fill example claim
+          </Button>
+          <p className="text-xs text-surface-muted">
+            Uses the same pattern as bounty #4 — min 0.1 STT payout + gas
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="mt-8 space-y-8">
           <section>
             <label className="text-xs font-medium uppercase tracking-widest text-surface-muted">
@@ -207,18 +291,22 @@ export function PostBountyView() {
               value={claim}
               onChange={(e) => setClaim(e.target.value)}
               rows={4}
+              minLength={MIN_CLAIM}
               maxLength={MAX_CLAIM}
-              placeholder="State a verifiable fact resolvers can investigate…"
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)] px-4 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-cyan/40 focus:outline-none"
+              required
+              placeholder="Is the chemical formula for water H2O?"
+              className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none ${
+                claim.length > 0 && !claimValid ? 'border-danger/50' : 'border-white/10 focus:border-cyan/40'
+              }`}
             />
-            <p className="mt-1 text-xs text-surface-muted">
-              {claim.length}/{MAX_CLAIM} · min {MIN_CLAIM} characters
+            <p className={`mt-1 text-xs ${claimValid ? 'text-surface-muted' : 'text-danger'}`}>
+              {claim.trim().length}/{MAX_CLAIM} · need at least {MIN_CLAIM} characters
             </p>
           </section>
 
           <section>
             <label className="text-xs font-medium uppercase tracking-widest text-surface-muted">
-              Evidence sources (https)
+              Evidence sources (https) <span className="text-danger">*</span>
             </label>
             <div className="mt-2 space-y-2">
               {evidence.map((url, i) => (
@@ -281,9 +369,14 @@ export function PostBountyView() {
               <input
                 type="datetime-local"
                 value={deadline}
+                min={minDeadlineLocal()}
+                max={maxDeadlineLocal()}
                 onChange={(e) => setDeadline(e.target.value)}
                 className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bg-card)] px-4 py-3 text-sm text-[var(--text)] focus:border-cyan/40 focus:outline-none"
               />
+              {!deadlineValid ? (
+                <p className="mt-1 text-xs text-danger">Pick a date within the next {MAX_DEADLINE_DAYS} days</p>
+              ) : null}
             </div>
             <div>
               <label className="text-xs font-medium uppercase tracking-widest text-surface-muted">
@@ -303,8 +396,16 @@ export function PostBountyView() {
           <Card className="bg-[var(--bg-card)]/40">
             <p className="text-xs uppercase tracking-widest text-surface-muted">Gas estimate</p>
             <p className="mt-1 font-mono text-sm text-surface-text">
-              {gasEstimate ? `~${Number(gasStt).toFixed(6)} STT` : 'Connect wallet & complete form'}
+              {gasEstimate ? `~${Number(gasStt).toFixed(6)} STT` : '—'}
             </p>
+            {gasHint ? <p className="mt-2 text-sm text-danger">{gasHint}</p> : null}
+            {!formValid && validationHints.length > 0 ? (
+              <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-surface-muted">
+                {validationHints.map((hint) => (
+                  <li key={hint}>{hint}</li>
+                ))}
+              </ul>
+            ) : null}
             <p className="mt-3 text-sm text-cyan">You&apos;ll send: {totalPreview}</p>
           </Card>
 

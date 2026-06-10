@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'viem/actions';
+import { estimateContractGasWithFallback, GAS_FALLBACK } from '../../lib/gas';
 import { publicClient } from '../../lib/viem';
 import { addresses, appealLayerAbi } from '../../lib/contracts';
 import { formatSTT } from '../../lib/utils/format';
@@ -17,7 +18,7 @@ type Props = {
 
 export function AppealPanel({ bountyId, resolvedAt }: Props) {
   const appealAddress = addresses.appealLayer;
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { writeContractAsync, isPending } = useWriteContract();
   const [evidenceUrl, setEvidenceUrl] = useState('https://');
@@ -64,12 +65,25 @@ export function AppealPanel({ bountyId, resolvedAt }: Props) {
 
     setMessage(null);
     try {
+      const gas = await estimateContractGasWithFallback(
+        publicClient,
+        {
+          address: appealAddress,
+          abi: appealLayerAbi,
+          functionName: 'openAppeal',
+          args: [bountyId, [evidenceUrl.trim()]],
+          account: address!,
+          value: minBond,
+        },
+        GAS_FALLBACK.openAppeal,
+      );
       const hash = await writeContractAsync({
         address: appealAddress,
         abi: appealLayerAbi,
         functionName: 'openAppeal',
         args: [bountyId, [evidenceUrl.trim()]],
         value: minBond,
+        gas,
       });
       await waitForTransactionReceipt(publicClient, { hash });
       await refetch();
@@ -77,7 +91,7 @@ export function AppealPanel({ bountyId, resolvedAt }: Props) {
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Failed to open appeal');
     }
-  }, [appealAddress, bountyId, evidenceUrl, isConnected, minBond, openConnectModal, refetch, writeContractAsync]);
+  }, [address, appealAddress, bountyId, evidenceUrl, isConnected, minBond, openConnectModal, refetch, writeContractAsync]);
 
   if (!appealAddress) {
     return (
