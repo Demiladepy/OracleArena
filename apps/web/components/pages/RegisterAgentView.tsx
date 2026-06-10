@@ -6,7 +6,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { isAddress } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
-import { deployedAddresses } from '@oracle-arena/config';
 import { estimateContractGasWithFallback, GAS_FALLBACK } from '../../lib/gas';
 import { publicClient } from '../../lib/viem';
 import { addresses, resolverRegistryAbi } from '../../lib/contracts';
