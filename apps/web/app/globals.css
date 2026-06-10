@@ -27,6 +27,28 @@
 
   html {
     @apply scroll-smooth;
+    color-scheme: dark;
+  }
+
+  input,
+  textarea,
+  select {
+    color: var(--text);
+    background-color: var(--bg-card);
+    caret-color: var(--text);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: var(--text);
+    box-shadow: 0 0 0 1000px var(--bg-card) inset;
   }
 
   body {
