@@ -260,28 +260,28 @@ export function ArchitectureSection() {
 
         <ArchitectureDiagram refs={refs} bountySuccess={bountySuccess} />
 
+        {!reduced ? (
+          <ScrollStageBar
+            activeIndex={stageIndex}
+            progress={scrollProgress}
+            onSkip={usePin ? () => scrollPastSection(sectionRef.current) : undefined}
+          />
+        ) : null}
+
         <p
           ref={proofRef}
-          className="mt-8 max-w-lg text-center text-sm text-[var(--text-dim)]"
+          className="mt-6 max-w-lg text-center text-sm text-[var(--text-dim)]"
         >
           This actually happened on Somnia testnet.{' '}
           <Link
             href={CONSENSUS_TX}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring rounded font-mono text-cyan hover:underline"
+            className="focus-ring rounded font-mono text-white/90 underline decoration-white/30 underline-offset-2 hover:decoration-white"
           >
             Tx 0xaafb4879…
           </Link>
         </p>
-
-        {!reduced ? (
-          <ScrollStageBar
-            activeIndex={stageIndex}
-            progress={scrollProgress}
-            onSkip={() => scrollPastSection(sectionRef.current)}
-          />
-        ) : null}
       </div>
     </section>
   );
